@@ -25,4 +25,9 @@
     <ProjectReference Include="..\..\YARG\YARG.Core\YARG.Core\YARG.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Código do jogo sem dependência do Unity, testado aqui direto do fork. -->
+    <Compile Include="..\..\YARG\Assets\Script\Input\Bindings\AnalogButtonHysteresis.cs" Link="Fork\AnalogButtonHysteresis.cs" />
+  </ItemGroup>
+
 </Project>
