@@ -14,8 +14,8 @@
 | Ferramenta autochart | **Funcionando** (`autochart/`): CLI, arrastar-e-soltar, relatório, validação no YARG.Core, 20 testes unitários |
 | Músicas de teste | **3 publicadas**: `samples/` + Release https://github.com/codingfoxxx/yarg-autochart/releases/tag/musicas-teste-v1 (pré-lançamento) |
 | Unity / build do jogo | **Bloqueado**: disco (ver abaixo) e, mais sério, o **Smart App Control barra o compilador do Unity** (testado com o 6000.6.3f1; ver abaixo) |
-| Eixo A no código do jogo | **Iniciado e publicado no fork** (`pessoal` @ `b728439c`): histerese nos gatilhos do controle; correção de `Keyboard.current` nulo. Compila (verificador próprio, 0 erros); sem teste no jogo rodando |
-| Testes .NET | 34/34 (engine + histerese) — rodam num contêiner Linux, porque o Windows passou a barrar a DLL de testes recompilada |
+| Eixo A no código do jogo | **Publicado no fork** (`pessoal` @ `f542fbf4`): histerese nos gatilhos do controle; correção de `Keyboard.current` nulo; **calibração guiada** (instruções pt-BR/en, 2 passadas, resultado explicado, salvar no perfil ou global). Compila (verificador próprio, 0 erros, mesmos 26 avisos do upstream); sem teste no jogo rodando |
+| Testes .NET | 43/43 (engine + histerese + calibração) — rodam num contêiner Linux, porque o Windows passou a barrar a DLL de testes recompilada |
 | PLAYTEST.md / relatório final | Pendentes |
 
 ## ⚠ Decisão importante para a manhã: Smart App Control × Unity
@@ -50,6 +50,7 @@
 - **autochart**: batidas sub-quadro + fase pelos ataques; andamento único quando cabe no ruído (124,0 BPM exatos na música do Admiral Bob); deriva real seguida (165→176 BPM ao vivo no Aguaviva); compasso único com fase (3/4 no waltz); vocabulário rítmico por música (sem tercinas falsas); filtro de vazamento; validação no YARG.Core com conferência nota a nota do tipo strum/HOPO/tap.
 - **Resultados nas 3 músicas**: 0 violações; o scanner do jogo acha as 4 dificuldades; tipos de nota conferem 100%; jogador perfeito 100%; humano σ20 ms 99,9-100%; humano σ35 ms 95,7-97,9%.
 - **02:30–03:15, Eixo A:** Unity 6000.6.3f1 em modo batch → bloqueado pelo Smart App Control (acima). Verificador de compilação próprio com o Roslyn do Unity: as 116 assemblies do projeto compilam (0 erros) numa cópia com remendos de versão. **Histerese dos gatilhos** implementada no fork (configurável por controle; o preset do controle solta a 75% do ponto de acionamento, o padrão do Input System) com 9 testes na engine real: gatilho pairando em 0,5 ± 0,06 durante um sustain → sustain derrubado em 20/20 sem histerese, 0/20 com. **`Keyboard.current` nulo** corrigido em 2 lugares. Whammy revisado: o Input System já aplica deadzone de 12,5% no analógico, então não precisa mudar.
+- **03:10–03:40, calibração guiada** no fork: instruções claras (pt-BR/en), música tocada 2× (~40 toques), descarte só dos toques fora da curva, resultado explicado e escolha entre salvar na calibração de entrada do perfil ou na de áudio global. Simulação com 400 jogadores (erro humano de 15 ms): 95% dos resultados a menos de 5,7 ms do atraso real (uma passada, como no original: 8,4 ms).
 - **Validação do autochart × Smart App Control:** o Windows passou a barrar DLLs recompiladas, de forma inconsistente (o validador foi barrado às 02:56 e aceito às 03:00). O autochart agora detecta o bloqueio e roda o mesmo validador num contêiner Linux oficial da Microsoft (9 s); sem Docker, marca "não executada" com o motivo.
 - **Vigia noturno** (`_work\vigia-noturno.ps1`, log em `_work\vigia-noturno.log`): mantém o PC acordado enquanto há trabalho; após 25 min ocioso suspende com despertador (02:05, 07:10); em problema grava `_work\PROBLEMA-PC.txt` e suspende sem despertar. Encerra às 11:00. **Regra do Lucas: se algo der errado com o PC, parar, suspender e esperar.**
 
@@ -75,7 +76,7 @@
 
 1. [ ] (Lucas) liberar disco + Unity 6000.3.5f2 + Blender; decidir sobre o Smart App Control se o Unity 6000.3.5f2 não compilar ou se o `YARG.exe` for bloqueado.
 2. [ ] Build de linha de comando do fork (`-batchmode -buildWindows64Player`), teste de fumaça (o jogo abre? acha as músicas de `songs\`?), medir FPS (PresentMon) e stutter.
-3. [x] Eixo A: histerese dos gatilhos (configurável), `Keyboard.current` sem nulo. [x] Whammy: não precisa (deadzone do Input System). [ ] Controle deslizante do ponto de soltura na tela de binds (prefab, precisa do editor). [ ] Calibração guiada para controle (instruções pt-BR/en, salvar por perfil).
+3. [x] Eixo A: histerese dos gatilhos (configurável), `Keyboard.current` sem nulo. [x] Whammy: não precisa (deadzone do Input System). [x] Calibração guiada para controle (instruções pt-BR/en, 2 passadas, salvar no perfil ou global). [ ] Controle deslizante do ponto de soltura na tela de binds (prefab, precisa do editor). [ ] Conferir no jogo: textos da calibração cabem na tela, fluxo com o controle.
 4. [ ] Testes de input no Unity (InputTestFixture com controle virtual de Xbox).
 5. [ ] PLAYTEST.md e relatório final (`RELATORIO-FINAL.md`), conferência do histórico git (sem marcas de IA).
 6. [ ] (opcional) PRs no upstream: os 2 bugs do YARG.Core e o teste de cultura.
