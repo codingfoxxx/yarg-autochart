@@ -36,6 +36,8 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--sem-stems", action="store_true", help="grava só song.ogg (sem guitar.ogg separado)")
     g.add_argument("--dispositivo", default="cpu", help="cpu (padrão) ou cuda")
     g.add_argument("--dificuldades", default=",".join(DIFFICULTIES), help="lista separada por vírgula")
+    g.add_argument("--sem-validacao", action="store_true",
+                   help="não roda o validador do YARG.Core no fim (mais rápido)")
     return p
 
 
@@ -55,7 +57,8 @@ def main(argv: list[str] | None = None) -> int:
                         year=args.ano, genre=args.genero, charter="autochart (gerado automaticamente)",
                         loading_phrase="Chart gerado automaticamente pelo autochart. Revise no Moonscraper se quiser.")
         opts = Options(fonte=args.fonte, densidade=args.densidade, sensibilidade=args.sensibilidade,
-                       stems=not args.sem_stems, dispositivo=args.dispositivo, dificuldades=diffs)
+                       stems=not args.sem_stems, dispositivo=args.dispositivo, dificuldades=diffs,
+                       validar=not args.sem_validacao)
         result = generate(args.audio, args.saida or _default_output(), meta, opts)
         return 1 if result.report.get("violacoes") else 0
     return 2

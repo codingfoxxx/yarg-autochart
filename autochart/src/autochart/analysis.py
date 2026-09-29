@@ -99,6 +99,15 @@ def phase_offset(beats: np.ndarray, onset_times: np.ndarray, window: float = 0.0
     return float(np.median(r)), float(ok.mean())
 
 
+def _local_period(beats: np.ndarray, half_window: int = 8) -> np.ndarray:
+    """Período local (mediana dos intervalos vizinhos) para cada intervalo entre batidas."""
+    d = np.diff(beats)
+    out = np.empty_like(d)
+    for i in range(len(d)):
+        out[i] = np.median(d[max(0, i - half_window):i + half_window + 1])
+    return out
+
+
 def clean_beats(beats: np.ndarray, downbeats: np.ndarray, min_bpm: float = 60.0,
                 max_bpm: float = 200.0) -> BeatResult:
     notes: list[str] = []
@@ -106,21 +115,61 @@ def clean_beats(beats: np.ndarray, downbeats: np.ndarray, min_bpm: float = 60.0,
     if len(beats) < 4:
         return BeatResult(beats, downbeats, ["poucas batidas detectadas"])
 
-    # Remove batidas espúrias (muito próximas) e preenche buracos (batidas perdidas).
-    ibi = float(np.median(np.diff(beats)))
-    kept = [beats[0]]
-    for b in beats[1:]:
-        if b - kept[-1] < 0.5 * ibi:
-            continue
-        gap = b - kept[-1]
-        if gap > 1.5 * ibi:
-            n = int(round(gap / ibi))
-            kept.extend(kept[-1] + gap * k / n for k in range(1, n))
-        kept.append(b)
-    removed = len(beats) - len(kept)
-    beats = np.array(kept)
-    if removed:
-        notes.append(f"{removed:+d} batidas ajustadas (espúrias/perdidas)")
+    # Regulariza pelo período local: remove batidas que criam intervalos curtos demais
+    # (< 0,75 do local) e preenche buracos (≥ 1,5 do local), até estabilizar.
+    removed = inserted = 0
+    for _ in range(4):
+        changed = False
+        period = _local_period(beats)
+        d = np.diff(beats)
+        keep = np.ones(len(beats), dtype=bool)
+        i = 0
+        while i < len(d):
+            if d[i] < 0.75 * period[i]:
+                # remove a batida (i ou i+1) que pior se encaixa nos vizinhos
+                prev = beats[i - 1] if i > 0 else beats[i] - period[i]
+                nxt = beats[i + 2] if i + 2 < len(beats) else beats[i + 1] + period[i]
+                err_i = abs((beats[i] - prev) - period[i]) + abs((nxt - beats[i]) - 2 * period[i]) * 0.5
+                err_j = abs((beats[i + 1] - prev) - 2 * period[i]) * 0.5 + abs((nxt - beats[i + 1]) - period[i])
+                keep[i if err_i > err_j else i + 1] = False
+                removed += 1
+                changed = True
+                i += 2
+                continue
+            i += 1
+        beats = beats[keep]
+        d = np.diff(beats)
+        period = _local_period(beats)
+        filled = [beats[0]]
+        for k in range(len(d)):
+            ratio = d[k] / period[k]
+            if ratio >= 1.5:
+                n = int(round(ratio))
+                filled.extend(beats[k] + d[k] * j / n for j in range(1, n))
+                inserted += n - 1
+                changed = True
+            filled.append(beats[k + 1])
+        beats = np.array(filled)
+        if not changed:
+            break
+    # Trechos inteiros em meio tempo (o detector trocou de nível métrico por várias batidas): o
+    # período local também dobra e a regra acima não vê. Compara com o período global.
+    global_period = float(np.median(np.diff(beats)))
+    d = np.diff(beats)
+    filled = [beats[0]]
+    halftime = 0
+    for k in range(len(d)):
+        ratio = d[k] / global_period
+        n = 2 if 1.8 <= ratio <= 2.25 else 3 if 2.7 <= ratio <= 3.3 else 1
+        if n > 1:
+            filled.extend(beats[k] + d[k] * j / n for j in range(1, n))
+            halftime += n - 1
+        filled.append(beats[k + 1])
+    beats = np.array(filled)
+    inserted += halftime
+    if removed or inserted:
+        notes.append(f"batidas corrigidas: {removed} espúrias removidas, {inserted} inseridas"
+                     + (f" (das quais {halftime} em trecho de meio tempo)" if halftime else ""))
 
     bpm = 60.0 / float(np.median(np.diff(beats)))
     if bpm > max_bpm:

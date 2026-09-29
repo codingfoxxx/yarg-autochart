@@ -28,12 +28,46 @@ def chord_size(pitches: list[int], amplitudes: list[float]) -> tuple[int, int]:
     return min(1 + len(tones), 3), root
 
 
+def make_bleed_ratio(target: np.ndarray, others: list[np.ndarray], sr: int, window: float = 0.12):
+    """Função (início, altura MIDI) → energia dos outros stems ÷ energia do stem-alvo naquela altura.
+
+    Mede a fundamental e 2 harmônicos numa janela curta após o início. Razão alta = a nota está
+    muito mais forte em outro instrumento (órgão, piano…): provável vazamento no stem-alvo.
+    """
+    t = target.mean(axis=1) if target.ndim == 2 else target
+    o = sum((x.mean(axis=1) if x.ndim == 2 else x) for x in others) if others else np.zeros_like(t)
+    n = int(window * sr)
+    hann = np.hanning(n)
+    idx = np.arange(n)
+
+    def energy(y: np.ndarray, a: int, f0: float) -> float:
+        seg = y[a:a + n]
+        if len(seg) < n:
+            return 0.0
+        seg = seg * hann
+        total = 0.0
+        for h in (1, 2, 3):
+            w = np.exp(-2j * np.pi * f0 * h * idx / sr)
+            total += abs(np.dot(seg, w)) ** 2
+        return total
+
+    def ratio(start: float, pitch: float) -> float:
+        a = max(0, int(start * sr))
+        f0 = 440.0 * 2 ** ((pitch - 69.0) / 12.0)
+        return energy(o, a, f0) / (energy(t, a, f0) + 1e-12)
+
+    return ratio
+
+
 def build_events(onsets: Onsets, notes: list[PitchNote], *, match_before: float = 0.05,
-                 match_after: float = 0.08, legato_min_amplitude: float = 0.35,
-                 legato_min_gap: float = 0.06) -> list[Event]:
+                 match_after: float = 0.08, legato_min_amplitude: float = 0.4,
+                 missed_min_amplitude: float = 0.5, legato_max_interval: int = 5,
+                 legato_min_gap: float = 0.06, bleed_ratio=None,
+                 bleed_max_transcribed: float = 4.0, bleed_max_onset: float = 8.0) -> list[Event]:
     starts = [n.start for n in notes]
     used: set[int] = set()
     events: list[Event] = []
+    rejected_bleed = 0
 
     for t, strength in zip(onsets.times, onsets.strengths):
         lo = bisect.bisect_left(starts, t - match_before)
@@ -48,26 +82,47 @@ def build_events(onsets: Onsets, notes: list[PitchNote], *, match_before: float 
             else:
                 pitch = float(root)
             duration = max(notes[i].end for i in idx) - t
+            if bleed_ratio is not None and bleed_ratio(float(t), pitch) >= bleed_max_onset:
+                rejected_bleed += 1
+                continue
             events.append(Event(time=float(t), strength=float(strength), pitch=pitch, polyphony=size,
                                 duration=max(0.0, duration)))
         else:
             events.append(Event(time=float(t), strength=float(strength)))
 
-    # Notas transcritas sem ataque detectado: ou o detector perdeu o ataque, ou é um ligado
-    # (hammer-on / pull-off). Só é ligado se outra nota, de outra altura, ainda soa nesse instante.
+    # Notas transcritas sem ataque detectado. Só viram evento em dois casos:
+    # - ligado (hammer-on / pull-off): outra nota termina quando esta começa (±40 ms), a um
+    #   intervalo pequeno (≤ 5 semitons) — é uma transição de nota, não uma nota por cima de outra;
+    # - ataque perdido: amplitude alta e subida real no envelope de ataques perto do início.
+    # O resto (vazamento de outros instrumentos no stem, harmonia sustentada) é descartado.
     event_times = np.array(sorted(e.time for e in events)) if events else np.array([])
+    env, env_t = onsets.envelope, onsets.frame_times
+    env_level = float(np.percentile(env, 80)) if len(env) else 0.0
     for i, n in enumerate(notes):
         if i in used or n.amplitude < legato_min_amplitude:
             continue
         if event_times.size and np.min(np.abs(event_times - n.start)) < legato_min_gap:
             continue
-        ringing = any(o.start < n.start - 0.02 and o.end > n.start + 0.02 and o.pitch != n.pitch
-                      for o in notes[max(0, i - 8):i])
+        legato = any(o.pitch != n.pitch and o.start < n.start - 0.03 and abs(o.end - n.start) <= 0.04
+                     and abs(o.pitch - n.pitch) <= legato_max_interval
+                     for o in notes[max(0, i - 8):i])
+        if legato:
+            attack = 0.4
+        else:
+            j = int(np.searchsorted(env_t, n.start))
+            local = float(np.max(env[max(0, j - 4):j + 5])) if len(env) else 0.0
+            if n.amplitude < missed_min_amplitude or local < env_level:
+                continue
+            attack = 0.8
+        if bleed_ratio is not None and bleed_ratio(n.start, float(n.pitch)) >= bleed_max_transcribed:
+            rejected_bleed += 1
+            continue
         events.append(Event(time=n.start, strength=0.25, pitch=float(n.pitch), polyphony=1,
-                            duration=n.end - n.start, attack=0.4 if ringing else 0.8, from_onset=False))
+                            duration=n.end - n.start, attack=attack, from_onset=False))
 
     events.sort(key=lambda e: e.time)
     _relative_attack(events)
+    build_events.rejected_bleed = rejected_bleed  # para o relatório
     return events
 
 

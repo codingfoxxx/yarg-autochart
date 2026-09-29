@@ -16,6 +16,7 @@
 
 # Saídas geradas e ferramentas locais (portáteis, baixadas por script)
 /songs/
+/_cache/
 /_tools/
 /_builds/
 /_downloads/

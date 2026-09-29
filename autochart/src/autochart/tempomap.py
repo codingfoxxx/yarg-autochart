@@ -113,13 +113,21 @@ def _fit_ibi(beats: np.ndarray, start: int, end: int, anchor: float) -> float:
     return float(np.dot(k, y) / np.dot(k, k))
 
 
-def _max_residual(beats: np.ndarray, start: int, end: int, anchor: float, ibi: float) -> float:
+def _max_residual(beats: np.ndarray, start: int, end: int, anchor: float, ibi: float, smooth: int = 8) -> float:
+    """Maior desvio da média móvel dos resíduos (janela de ``smooth`` batidas).
+
+    Usar a média móvel, e não cada resíduo, separa deriva real de andamento (que se acumula
+    por várias batidas) do ruído do detector (~5-8 ms por batida, sem tendência).
+    """
     k = np.arange(0, end - start + 1, dtype=float)
-    return float(np.max(np.abs(beats[start:end + 1] - (anchor + k * ibi))))
+    res = beats[start:end + 1] - (anchor + k * ibi)
+    if len(res) >= smooth:
+        res = np.convolve(res, np.ones(smooth) / smooth, mode="valid")
+    return float(np.max(np.abs(res)))
 
 
-def build_tempo_map(beats: np.ndarray, downbeats: np.ndarray | None = None, *, tolerance: float = 0.015,
-                    min_segment_beats: int = 8, resolution: int = RESOLUTION) -> tuple[TempoMap, GridReport]:
+def build_tempo_map(beats: np.ndarray, downbeats: np.ndarray | None = None, *, tolerance: float = 0.008,
+                    min_segment_beats: int = 16, resolution: int = RESOLUTION) -> tuple[TempoMap, GridReport]:
     """Monta o mapa de tempo a partir das batidas (s) e dos tempos fortes (s).
 
     - Antes da primeira batida: ``k0`` batidas de "lead-in" no mesmo andamento inicial.
@@ -148,10 +156,19 @@ def build_tempo_map(beats: np.ndarray, downbeats: np.ndarray | None = None, *, t
     tempos.append(TempoEvent(0, lead_millibpm))
     anchor = k0 * 60.0 / (lead_millibpm / 1000.0)  # tempo real do tick k0*res no mapa arredondado
 
-    # Trechos de tempo constante (guloso, com continuidade).
     n = len(beats)
-    start = 0
     segment_bpms: list[tuple[int, int]] = []  # (índice da batida inicial, millibpm)
+
+    # Modelo mais simples primeiro: um andamento único para a música inteira (gravação com
+    # metrônomo). Aceito se a média móvel (16 batidas) dos resíduos fica abaixo de 10 ms.
+    single_ibi = _fit_ibi(beats, 0, n - 1, anchor)
+    if _max_residual(beats, 0, n - 1, anchor, single_ibi, smooth=16) <= max(tolerance, 0.012):
+        segment_bpms.append((0, int(round(60.0 / single_ibi * 1000))))
+        start = n - 1
+    else:
+        start = 0
+
+    # Senão, trechos de tempo constante (guloso, com continuidade).
     while start < n - 1:
         end = min(start + min_segment_beats, n - 1)
         ibi = _fit_ibi(beats, start, end, anchor)
@@ -203,53 +220,27 @@ def _time_signatures(beats: np.ndarray, downbeats: np.ndarray | None, k0: int,
     if len(idx) < 2:
         return [TimeSignature(0, 4)], 0, 0
 
-    raw = [int(x) for x in np.diff(idx)]
-    values, counts = np.unique(raw, return_counts=True)
-    main = int(values[np.argmax(counts)])
-    main = min(max(main, 2), 7)
-
-    # Regulariza os compassos (sem mover tempos fortes, para o alinhamento valer por construção):
-    # - múltiplo do compasso principal → vários compassos principais (tempo forte perdido);
-    # - compasso de 1 batida → funde com o seguinte (tempo forte espúrio).
-    bars: list[int] = []
-    carry = 0
-    for length in raw:
-        length += carry
-        carry = 0
-        if length == 1:
-            carry = 1
-            continue
-        if length % main == 0:
-            bars.extend([main] * (length // main))
-        else:
-            bars.append(length)
-    if carry and bars:
-        bars[-1] += carry
-
-    first = idx[0]
-    pickup = k0 + first  # batidas desde o tick 0 até o primeiro tempo forte
-    sigs: list[TimeSignature] = []
+    # Fórmula única com fase: o par (tamanho do compasso, fase) que melhor concorda com os tempos
+    # fortes detectados na música inteira. Tempos fortes de detector oscilam; a fórmula de uma
+    # música quase sempre é constante (mudanças raras ficam para a edição manual).
+    detected = np.array(idx)
+    n_beats = len(beats)
+    best = (-1.0, 4, 0)
+    for m in (4, 3, 2, 6, 5, 7):  # empate: prefere 4/4, depois 3/4
+        for phase in range(m):
+            expected = np.arange(phase, n_beats, m)
+            hits = np.isin(expected, detected).sum()
+            precision = hits / len(detected)
+            recall = hits / max(1, len(expected))
+            score = 2 * precision * recall / max(precision + recall, 1e-9)
+            if score > best[0] + 1e-9:
+                best = (score, m, phase)
+    _, main, phase = best
+    pickup = k0 + phase  # batidas desde o tick 0 até o primeiro tempo forte
     remainder = pickup % main
-    if remainder:
-        sigs.append(TimeSignature(0, remainder))
-        sigs.append(TimeSignature(remainder * resolution, main))
-    else:
-        sigs.append(TimeSignature(0, main))
-
-    # Cada compasso começa onde o anterior termina; TS novo só quando o tamanho muda.
-    changes = 0
-    current = main
-    beat = pickup
-    for length in bars:
-        if length != current:
-            sigs.append(TimeSignature(beat * resolution, length))
-            current = length
-            changes += 1
-        beat += length
-    # Depois do último tempo forte detectado, volta ao compasso principal.
-    if current != main:
-        sigs.append(TimeSignature(beat * resolution, main))
-    return _normalize_timesigs(sigs), int(remainder), changes
+    sigs = [TimeSignature(0, remainder), TimeSignature(remainder * resolution, main)] if remainder \
+        else [TimeSignature(0, main)]
+    return _normalize_timesigs(sigs), int(remainder), 0
 
 
 def _normalize_timesigs(sigs: list[TimeSignature]) -> list[TimeSignature]:

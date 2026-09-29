@@ -14,7 +14,7 @@ import numpy as np
 from . import RESOLUTION, __version__, analysis, audio
 from .chart import render_chart, validate_notes, write_song_folder
 from .difficulty import build_difficulties
-from .events import build_events, fill_missing_pitch
+from .events import build_events, fill_missing_pitch, make_bleed_ratio
 from .model import DIFFICULTIES, SongMeta
 from .quantize import quantize
 from .report import (alignment_metrics, difficulty_stats, estimate_diff_guitar, playability_violations,
@@ -22,6 +22,7 @@ from .report import (alignment_metrics, difficulty_stats, estimate_diff_guitar, 
 from .sections import detect_sections
 from .starpower import place_star_power
 from .tempomap import build_tempo_map
+from .validate import validate_with_yarg
 
 SOURCES = ("guitarra", "outros", "baixo", "mix")
 _STEM_OF = {"guitarra": "guitar", "outros": "other", "baixo": "bass"}
@@ -36,7 +37,8 @@ class Options:
     dispositivo: str = "cpu"
     dificuldades: tuple[str, ...] = DIFFICULTIES
     silencio_inicial_min: float = 1.5  # garante pelo menos isso antes da 1ª batida
-    tolerancia_grid: float = 0.015     # s; ver tempomap.build_tempo_map
+    validar: bool = True               # roda o validador do YARG.Core no fim
+    tolerancia_grid: float = 0.008     # s, na média móvel dos resíduos; ver tempomap.build_tempo_map
 
 
 @dataclass
@@ -51,6 +53,38 @@ def _sha256(path: Path) -> str:
         for block in iter(lambda: f.read(1 << 20), b""):
             h.update(block)
     return h.hexdigest()
+
+
+_CACHED_STEMS = ("guitar", "other", "bass", "piano", "vocals")
+
+
+def _stem_cache_dir(sha: str, pad: float) -> Path:
+    root = Path(__file__).resolve().parents[3] / "_cache" / "stems"
+    return root / f"{sha[:16]}-pad{int(round(pad * 1000))}"
+
+
+def _cached_stems(sha: str, pad: float, n: int) -> dict[str, np.ndarray] | None:
+    """Stems já separados deste mesmo áudio (mesmo SHA-256 e mesmo silêncio inicial)."""
+    import soundfile as sf
+    folder = _stem_cache_dir(sha, pad)
+    if not all((folder / f"{s}.flac").is_file() for s in _CACHED_STEMS):
+        return None
+    out = {}
+    for s in _CACHED_STEMS:
+        data, _ = sf.read(str(folder / f"{s}.flac"), dtype="float32", always_2d=True)
+        if len(data) != n:
+            return None
+        out[s] = data
+    return out
+
+
+def _store_stems(sha: str, pad: float, stems: dict[str, np.ndarray]) -> None:
+    import soundfile as sf
+    folder = _stem_cache_dir(sha, pad)
+    folder.mkdir(parents=True, exist_ok=True)
+    for s in _CACHED_STEMS:
+        if s in stems:
+            sf.write(str(folder / f"{s}.flac"), np.clip(stems[s], -1, 1), audio.SAMPLE_RATE, subtype="PCM_24")
 
 
 def _safe_name(text: str) -> str:
@@ -101,10 +135,16 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
     stems: dict[str, np.ndarray] = {}
     source_signal = mix
     source_used = "mix"
+    input_sha = _sha256(audio_path)
     if opts.fonte != "mix" or opts.stems:
         t0 = time.time()
-        stems = analysis.separate(mix, device=opts.dispositivo)
-        step("separação (Demucs htdemucs_6s)", t0)
+        stems = _cached_stems(input_sha, pad, len(mix))
+        if stems is None:
+            stems = analysis.separate(mix, device=opts.dispositivo)
+            _store_stems(input_sha, pad, stems)
+            step("separação (Demucs htdemucs_6s)", t0)
+        else:
+            step("separação (cache)", t0)
     if opts.fonte != "mix":
         wanted = stems[_STEM_OF[opts.fonte]]
         if audio.rms_db(wanted) < audio.rms_db(mix) - 24.0:
@@ -123,9 +163,15 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
     pitch_notes = analysis.transcribe(source_signal)
     step("alturas (Basic Pitch)", t0)
 
-    events = build_events(onsets, pitch_notes)
+    bleed = None
+    if source_used != "mix" and stems:
+        others = [stems[s] for s in ("other", "piano", "vocals") if s in stems and s != _STEM_OF.get(source_used)]
+        bleed = make_bleed_ratio(source_signal, others, audio.SAMPLE_RATE)
+    events = build_events(onsets, pitch_notes, bleed_ratio=bleed)
+    rejected_bleed = getattr(build_events, "rejected_bleed", 0)
     pitched = fill_missing_pitch(events)
-    quantized = quantize(events, tempo)
+    quantized, rhythm = quantize(events, tempo)
+    log(f"  ritmo: {rhythm.describe()}")
     q_errors = np.array([abs(q.error_ms) for q in quantized]) if quantized else np.array([0.0])
 
     t0 = time.time()
@@ -165,6 +211,16 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
     for name, notes in diffs.items():
         violations += [f"{name}: {p}" for p in validate_notes(notes)]
         violations += playability_violations(name, notes, tempo, star_power)
+
+    yarg_check = None
+    if opts.validar:
+        t0 = time.time()
+        yarg_check = validate_with_yarg(folder, diffs, tempo.resolution)
+        step("validação no YARG.Core", t0)
+        if yarg_check is None:
+            log("  aviso: validador do YARG.Core indisponível (precisa do .NET SDK e de tools/validator)")
+        elif not yarg_check.get("ok"):
+            violations.append("validação no YARG.Core: " + (yarg_check.get("erro") or "falhou (ver validacao-yarg.json)"))
     nps = [stats[d]["nps_media"] for d in ("Easy", "Medium", "Hard", "Expert") if d in stats and stats[d].get("notas")]
     bpms = [t.bpm for t in tempo.tempos[1:]] or [tempo.tempos[0].bpm]
 
@@ -174,7 +230,7 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
         "tempo_total_s": round(time.time() - t_total, 1),
         "musica": {"titulo": meta.name, "artista": meta.artist, "album": meta.album, "ano": meta.year,
                    "genero": meta.genre, "diff_guitar": meta.diff_guitar},
-        "entrada": {"arquivo": audio_path.name, "sha256": _sha256(audio_path),
+        "entrada": {"arquivo": audio_path.name, "sha256": input_sha,
                     "duracao_s": round(duration_ms / 1000 - pad, 2)},
         "parametros": {**asdict(opts), "fonte_usada": source_used},
         "grid": {
@@ -190,12 +246,16 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
         },
         "analise": {"ataques": int(len(onsets.times)), "notas_transcritas": len(pitch_notes),
                     "eventos": len(events), "altura_detectada_pct": round(100 * pitched, 1),
+                    "descartados_por_vazamento": int(rejected_bleed),
                     "quantizacao_erro_mediano_ms": round(float(np.median(q_errors)), 1),
-                    "quantizacao_erro_p95_ms": round(float(np.percentile(q_errors, 95)), 1)},
+                    "quantizacao_erro_p95_ms": round(float(np.percentile(q_errors, 95)), 1),
+                    "ritmo": rhythm.describe(),
+                    "evidencia_subdivisoes_pct": {str(k): round(100 * v, 1) for k, v in rhythm.evidence.items()}},
         "alinhamento": alignment_metrics(expert, tempo, [q.event for q in quantized], onsets.times,
                                          onsets.strengths) if expert else {},
         "dificuldades": stats,
         "violacoes": violations,
+        "validacao_yarg": yarg_check,
         "densidade_monotonica": all(a < b for a, b in zip(nps, nps[1:])),
         "star_power": star_power,
         "secoes": sections,

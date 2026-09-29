@@ -101,8 +101,13 @@ public sealed class Rig
     public List<double> OverstrumTimes { get; } = [];
 
     public Rig(string chartText, GuitarEngineParameters? parameters = null)
+        : this(ChartText.Load(chartText), parameters)
     {
-        (Chart, Sync) = ChartText.Load(chartText);
+    }
+
+    public Rig((InstrumentDifficulty<GuitarNote> Notes, SyncTrack Sync) loaded, GuitarEngineParameters? parameters = null)
+    {
+        (Chart, Sync) = loaded;
         Engine = new YargFiveFretGuitarEngine(Chart, Sync, parameters ?? DefaultParameters(), isBot: false);
         // O jogo sempre chama SetSpeed logo após criar a engine (TrackPlayer). Sem isso SongSpeed fica 0
         // e, por exemplo, a tolerância de soltura do sustain vira zero.

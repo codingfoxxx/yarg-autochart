@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from .chart import final_types
-from .difficulty import PROFILES
+from .difficulty import PROFILES, min_gap
 from .model import OPEN, Note
 from .tempomap import GridReport, TempoMap
 
@@ -52,10 +52,9 @@ def playability_violations(name: str, notes: list[Note], tempo: TempoMap, star_p
         if k:
             prev = notes[k - 1]
             gap_s = tempo.tick_to_time(n.tick) - tempo.tick_to_time(prev.tick)
-            spb = 60.0 / tempo.bpm_at_tick(n.tick)
-            min_gap = max(prof.min_gap_beats * spb, prof.min_gap_s)
-            if gap_s < min_gap * 0.98:
-                out.append(f"{where}: {gap_s * 1000:.0f} ms da nota anterior (mín. {min_gap * 1000:.0f} ms)")
+            need = max(min_gap(prof, tempo, prev.tick), min_gap(prof, tempo, n.tick))
+            if gap_s < need * 0.98:
+                out.append(f"{where}: {gap_s * 1000:.0f} ms da nota anterior (mín. {need * 1000:.0f} ms)")
             if prev.length and prev.tick + prev.length > n.tick:
                 out.append(f"{where}: sustain anterior atravessa esta nota")
             if types[k] == "hopo" and not prev.is_chord and prev.lanes == n.lanes:
@@ -142,8 +141,12 @@ def write_report(folder: Path, data: dict) -> None:
             lines.append(f"- Notas vindas de ataques → ataque detectado mais próximo: mediana {a['nota_ao_ataque_mediana_ms']} ms, "
                          f"p95 {a['nota_ao_ataque_p95_ms']} ms.")
         lines.append(f"- Ataques fortes que viraram nota: {a['ataques_fortes_cobertos_pct']}%.")
-    lines += [f"- Eventos com altura detectada: {data['analise']['altura_detectada_pct']}%. "
-              f"Ataques detectados: {data['analise']['ataques']}; notas transcritas: {data['analise']['notas_transcritas']}.", ""]
+    an = data["analise"]
+    lines += [f"- Eventos com altura detectada: {an['altura_detectada_pct']}%. "
+              f"Ataques detectados: {an['ataques']}; notas transcritas: {an['notas_transcritas']}; "
+              f"descartados por vazamento de outros instrumentos: {an.get('descartados_por_vazamento', 0)}.",
+              f"- Ritmo inferido: {an.get('ritmo', '?')}; erro de quantização mediano {an['quantizacao_erro_mediano_ms']} ms "
+              f"(p95 {an['quantizacao_erro_p95_ms']} ms).", ""]
     lines += ["## Dificuldades", "", "| | Notas | NPS médio | NPS pico (2 s) | Acordes | Sustains | HOPO | Consistência de riffs |",
               "|---|---|---|---|---|---|---|---|"]
     for name, s in data["dificuldades"].items():
@@ -158,6 +161,21 @@ def write_report(folder: Path, data: dict) -> None:
               f"- Frases de star power: {len(data['star_power'])}; seções: {len(data['secoes'])}."]
     for item in v[:30]:
         lines.append(f"  - {item}")
+    y = data.get("validacao_yarg")
+    lines += ["", "## Validação no YARG.Core (o código do jogo)", ""]
+    if y is None:
+        lines.append("- Não executada (validador indisponível).")
+    else:
+        lines.append(f"- Resultado: **{'OK' if y.get('ok') else 'FALHOU'}**"
+                     + (f" — {y['erro']}" if y.get("erro") else ""))
+        if y.get("dificuldades_no_jogo"):
+            lines.append(f"- Encontrada pelo scanner de músicas do jogo; dificuldades: {', '.join(y['dificuldades_no_jogo'])}.")
+        if y.get("por_dificuldade"):
+            lines += ["", "| | Notas lidas pelo jogo | Tipos (strum/HOPO/tap) conferem | Jogador perfeito | Humano σ 20 ms | Humano σ 35 ms |",
+                      "|---|---|---|---|---|---|"]
+            for name, s in y["por_dificuldade"].items():
+                lines.append(f"| {name} | {s['notas']} | {'sim' if s['tipos_conferem'] else '**não**'} | "
+                             f"{s['perfeito_pct']}% | {s['humano_20ms_pct']}% | {s['humano_35ms_pct']}% |")
     lines += ["", "## Tempos de processamento", ""]
     for k, t in data["tempos_s"].items():
         lines.append(f"- {k}: {t} s")

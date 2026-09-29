@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Valida pastas de música com o próprio YARG.Core (o mesmo código do jogo):
+       varredura da biblioteca, leitura do chart e partida simulada na engine de 5 trastes.
+
+       Roda como projeto de teste (dotnet test) de propósito: com o Smart App Control do Windows
+       ativo, uma DLL compilada localmente é barrada quando é o programa principal, mas carrega
+       como dependência do testhost (assinado pela Microsoft). Uso:
+         defina YARG_VALIDAR_PASTA (pasta da música ou da biblioteca) e, opcionalmente,
+         YARG_VALIDAR_JSON (arquivo de saída), e rode "dotnet test" nesta pasta
+         (scripts/validar-musica.ps1 faz isso).                                      -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <RootNamespace>GuitarHero.Validator</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageReference Include="NUnit" Version="4.5.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\YARG\YARG.Core\YARG.Core\YARG.Core.csproj" />
+    <!-- Reaproveita o simulador de jogador e o laço de frames dos testes da engine. -->
+    <Compile Include="..\..\tests\EngineTests\Harness.cs" Link="Harness.cs" />
+  </ItemGroup>
+
+</Project>

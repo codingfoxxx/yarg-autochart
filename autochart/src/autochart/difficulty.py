@@ -63,20 +63,27 @@ def select(candidates: list[int], ticks: list[int], priorities: list[float], tem
     """
     density = float(np.clip(density, 0.2, 1.5))
     order = sorted(candidates, key=lambda i: (-priorities[i], ticks[i]))
+    chosen_ticks: list[int] = []
     chosen: list[int] = []
-    chosen_times: list[float] = []
     for i in order:
-        t = tempo.tick_to_time(ticks[i])
-        spb = 60.0 / tempo.bpm_at_tick(ticks[i])
-        gap = max(profile.min_gap_beats * spb, profile.min_gap_s) / density
-        if chosen_times:
-            j = int(np.searchsorted(chosen_times, t))
-            if (j < len(chosen_times) and chosen_times[j] - t < gap - 1e-6) or \
-               (j > 0 and t - chosen_times[j - 1] < gap - 1e-6):
-                continue
-        chosen.append(i)
-        chosen_times.insert(int(np.searchsorted(chosen_times, t)), t)
+        tick = ticks[i]
+        j = int(np.searchsorted(chosen_ticks, tick))
+        ok = True
+        for k in (j - 1, j):
+            if 0 <= k < len(chosen_ticks):
+                other = chosen_ticks[k]
+                need = max(min_gap(profile, tempo, other), min_gap(profile, tempo, tick)) / density
+                if abs(tempo.tick_to_time(tick) - tempo.tick_to_time(other)) < need - 1e-6:
+                    ok = False
+        if ok:
+            chosen.append(i)
+            chosen_ticks.insert(j, tick)
     return sorted(chosen, key=lambda i: ticks[i])
+
+
+def min_gap(profile: Profile, tempo: TempoMap, tick: int) -> float:
+    """Intervalo mínimo (s) exigido perto de ``tick`` (depende do BPM local)."""
+    return max(profile.min_gap_beats * 60.0 / tempo.bpm_at_tick(tick), profile.min_gap_s)
 
 
 def _sustain_length(note_tick: int, next_tick: int | None, event: Event, tempo: TempoMap,
