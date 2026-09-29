@@ -1,0 +1,66 @@
+# ---------------------------------------------------------------
+# Repositório principal (ferramentas + documentação do projeto).
+# O fork do YARG é um repositório separado (ver DECISION.md).
+# ---------------------------------------------------------------
+
+# Fork do YARG: clonado em ./YARG, versionado no próprio repositório
+# (vira submódulo quando o fork existir no GitHub).
+/YARG/
+
+# Áudio NUNCA entra no git: evita commitar música sem licença verificada.
+# Músicas de teste com licença livre vão para o GitHub Releases.
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.opus
+*.m4a
+*.aac
+*.sng
+
+# Saídas geradas e ferramentas locais (portáteis, baixadas por script)
+/songs/
+/_tools/
+/_builds/
+/_downloads/
+/_work/
+/reports/
+*.log
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Modelos de ML baixados e caches
+/models/
+.cache/
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# Sistema / editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Segredos (defesa em profundidade: nada disso deve existir aqui)
+.env
+.env.*
+*.pem
+*.key
+*.pfx
