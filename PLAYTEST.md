@@ -2,7 +2,7 @@
 
 Roteiro para o Lucas testar o jogo e o autochart, com o que observar e como relatar. Tempo total: ~1 h.
 
-> **Estado em 29/09, 03:30:** o jogo ainda **não foi compilado**. Faltam o Unity 6000.3.5f2 e a decisão sobre o Smart App Control (ver `PROGRESS.md`). As partes **[depois do build]** dependem disso. A parte do autochart (seção 5) já pode ser testada.
+> **Estado em 29/09, 11:00:** o jogo está compilado em `C:\Dev\GuitarHero\_builds\YARG\YARG.exe` e abre com o Smart App Control ligado. As marcas **[depois do build]** já podem ser testadas. Até agora só verifiquei que ele abre e chega ao menu. Controle, telas e partidas ainda não foram testados.
 > Os caminhos de menu abaixo foram tirados do código do jogo, não de telas vistas rodando. Os nomes podem variar um pouco.
 
 ## 0. Antes de começar
@@ -39,7 +39,7 @@ Padrão do preset **Gamepad** (5 trastes):
 Na tela de edição de binds do perfil (*Edit Binds*):
 
 1. Aperte cada botão: **esperado:** o indicador do traste certo acende. Nenhum botão acende duas ações.
-2. **Teste da histerese (mudança do fork):** aperte **LT devagar**. Ele acende perto da **metade do curso**. Agora solte devagar: **deve continuar aceso até ~1/3 do curso** e só apagar depois disso. No YARG original, ele apaga assim que passa da metade.
+2. **Teste da histerese (mudança do fork).** Só vale para mapeamentos **novos** do controle. Use um perfil criado no fork, ou remova o controle do perfil e adicione de novo, escolhendo *Gamepad*. Para conferir: em `%USERPROFILE%\AppData\LocalLow\YARC\YARG\release\profiles\bindings.json`, os trastes verde e azul (LT/RT) devem ter `"ReleaseThreshold": "0.75"`. Remapear um botão à mão pela tela de binds cria o mapeamento sem histerese (ainda não há controle na tela para isso). Depois, aperte **LT devagar**. Ele acende perto da **metade do curso**. Agora solte devagar: **deve continuar aceso até ~1/3 do curso** e só apagar depois disso. No YARG original, ele apaga assim que passa da metade.
    - Se os gatilhos parecerem lentos para acionar, dá para baixar o ponto de acionamento (*Press Point*) no mesmo lugar. Anote o valor que ficou bom.
 3. Mexa o analógico esquerdo de leve e solte. **Esperado:** o whammy só reage fora do centro (o Input System ignora os primeiros 12,5% do curso).
 
@@ -49,9 +49,9 @@ Na tela de edição de binds do perfil (*Edit Binds*):
 
 1. **Calibrar latência** (A). **Esperado:** instruções em português, legíveis, cabendo na tela.
 2. Aperte qualquer botão para começar. Toque junto com cada batida por **30 s** (a música toca 2 vezes). Use a **palhetada (direcional ↓)**, que é o movimento que mais importa no jogo. **Esperado:** contador "Toque N".
-3. No fim, espere 1 s: aparecem **Salvar no perfil** (A), **Salvar para todos** (Y), **Repetir** (X), **Voltar** (B).
-   - **Esperado:** resultado em ms, consistência (boa/razoável/baixa) e quantos toques foram usados. Se a consistência sair "baixa", repita.
-4. Escolha **Salvar no perfil**. Confira em **Perfis**, no seu perfil, o campo de calibração de entrada com o mesmo valor.
+3. No fim, espere 1 s: aparecem **Salvar para todos** (A, recomendado), **Salvar no perfil** (Y), **Repetir** (X), **Voltar** (B).
+   - **Esperado:** resultado em ms, consistência (boa/razoável/baixa) e quantos toques foram usados. Se a consistência sair "baixa", repita. Se os toques ficarem espalhados demais, ou o atraso passar de 300 ms, o calibrador recusa o resultado e pede para repetir.
+4. Escolha **Salvar para todos**. Confira em **Configurações → Geral** o campo *Calibração de Áudio (ms)*. "Salvar no perfil" é para quem joga com controles diferentes em perfis diferentes.
 
 Anote: o resultado (ms), a consistência, e se o texto ficou cortado ou pequeno demais.
 
