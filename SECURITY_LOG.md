@@ -96,6 +96,7 @@ Máquina: Windows 11 Home, Defender ativo (plataforma 4.18.26080.4, assinaturas 
 | 2026-09-29 | `.venv` (Python 3.11, ~1,5 GB), `models\` (~130 MB), `_cache\stems` (~120 MB por música) | apagar as pastas |
 | 2026-09-29 09:33 | Unity **6000.6.3f1** desinstalado pelo desinstalador oficial (elevado, a pedido do Lucas); liberou ~15 GB. A sobra (2 arquivos de metadados do Hub) foi removida às 10:17 | reinstalar pelo Hub, se quiser |
 | 2026-09-29 10:17–10:30 | Unity **6000.3.5f2** instalado em modo silencioso em `C:\Program Files\Unity\Hub\Editor\6000.3.5f2` (elevado, a pedido do Lucas) | Painel de Controle → Programas, ou o `Uninstall.exe` da pasta |
+| 2026-09-29 11:00 | Configurações do jogo (`AppData\LocalLow\YARC\YARG\release\settings.json`): pasta de músicas `C:\Dev\GuitarHero\songs` e "Escanear Tudo ao Iniciar" ligado; atalho `YARG (fork).lnk` na Área de Trabalho | mudar nas configurações do jogo; apagar o atalho |
 | 2026-09-29 | Cópia só-de-scripts do fork para verificar compilação (`_work\unity-compilecheck`, ~1,3 GB com a `Library` do Unity); imagem Docker do SDK .NET e volume `guitarhero-nuget` | apagar a pasta; `docker volume rm guitarhero-nuget`; `docker image rm mcr.microsoft.com/dotnet/sdk:10.0` |
 
 ## Downloads da madrugada de 29/09 (pilha do auto-charting e ferramentas)

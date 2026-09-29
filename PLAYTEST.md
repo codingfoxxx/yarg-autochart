@@ -13,8 +13,8 @@ Roteiro para o Lucas testar o jogo e o autochart, com o que observar e como rela
 
 ## 1. Primeira abertura [depois do build]
 
-1. Abra o jogo. **Esperado:** menu principal em até ~30 s (a primeira varredura de músicas pode demorar).
-2. **Configurações → Músicas** (*Settings → Songs*): adicione a pasta `C:\Dev\GuitarHero\songs` e use **Atualizar todos os caches** (*Refresh All Caches*). **Esperado:** as 3 músicas aparecem em **Jogar**.
+1. Abra o jogo pelo atalho **YARG (fork)** na Área de Trabalho. **Esperado:** menu principal em alguns segundos. O jogo abre em inglês; para português, vá em *Settings → General → Language*.
+2. Já deixei configurado: a pasta `C:\Dev\GuitarHero\songs` (com as 3 músicas de teste) e **Escanear Tudo ao Iniciar** ligado. **Esperado:** as 3 músicas aparecem em **Quickplay/Jogar**. Para mudar a pasta: **Configurações → Músicas** (*Settings → Songs*).
    - Na mesma aba, ligue **Escanear Tudo ao Iniciar** (opção do fork): músicas novas passam a aparecer sozinhas quando o jogo abre. Sem ela, dentro da biblioteca, aperte **LB** (Laranja) e escolha **Escanear Músicas**.
 3. **Perfis → Adicionar Perfil** (*Profiles → Add Profile*): crie um perfil de **Guitarra (5 botões)**. Ative o perfil, adicione um dispositivo e escolha o controle de Xbox. Na pergunta *"Which kind of controller is this?"*, escolha **Gamepad**. O mapeamento padrão é aplicado sozinho.
    - O jogo **não** cria perfil automático para controle comum, só para guitarras e baterias de verdade. Esse passo é sempre manual.
