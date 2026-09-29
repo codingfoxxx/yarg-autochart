@@ -45,19 +45,19 @@ function Rodar-Unity([string]$log) {
     return @{ Codigo = $p.ExitCode; Inicio = $inicio }
 }
 
+# Pacotes NuGet (Assets/Packages, fora do git). Quem os restaura é o NuGetForUnity, mas em modo batch ele
+# não chega a rodar enquanto houver erro de compilação por falta deles. Restaura antes, nas versões exatas
+# do packages.config, com o SDK .NET portátil (os .meta ficam por conta do editor).
+if (-not (Test-Path (Join-Path $projeto 'Assets\Packages\ZString.2.5.1'))) {
+    Write-Host "Restaurando os pacotes NuGet do jogo..."
+    & (Join-Path $raiz '.venv\Scripts\python.exe') (Join-Path $raiz 'tools\unity-compile-check\preparar_copia.py') --nuget-no-fork
+    if ($LASTEXITCODE -ne 0) { throw "Falha ao restaurar os pacotes NuGet" }
+}
+
 Write-Host "Compilando $projeto com Unity $Versao -> $exe"
 $log1 = Join-Path $Saida 'build.log'
 $r = Rodar-Unity $log1
 $texto = Get-Content $log1 -Raw -ErrorAction SilentlyContinue
-
-# Primeira abertura: o NuGetForUnity restaura Assets/Packages durante o import; se o build começou
-# antes disso, faltam namespaces do NuGet. Uma segunda rodada resolve.
-if ($r.Codigo -ne 0 -and $texto -match "error CS0246: The type or namespace name '(Cysharp|Melanchall|ManagedBass|UniRx|FuzzySharp|SQLite)'") {
-    Write-Host "Pacotes do NuGet ainda não restaurados na 1ª rodada; tentando de novo..."
-    $log2 = Join-Path $Saida 'build-2.log'
-    $r = Rodar-Unity $log2
-    $texto = Get-Content $log2 -Raw -ErrorAction SilentlyContinue
-}
 
 # --- resultado ---
 $erros = [regex]::Matches($texto, 'error CS\d+[^\r\n]*') | ForEach-Object { $_.Value } | Select-Object -Unique -First 20

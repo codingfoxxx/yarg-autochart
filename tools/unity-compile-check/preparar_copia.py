@@ -19,7 +19,6 @@ import re
 import shutil
 import subprocess
 import sys
-import uuid
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -112,33 +111,12 @@ def remendos_codigo_do_jogo() -> None:
 # parecido com a escolha do NuGetForUnity.
 _TFMS = ["net48", "net472", "net471", "net47", "net462", "net461", "net46", "net45",
          "netstandard2.1", "netstandard2.0", "netstandard1.6", "netstandard1.4"]
-_META_PLUGIN = """fileFormatVersion: 2
-guid: {guid}
-PluginImporter:
-  externalObjects: {{}}
-  serializedVersion: 3
-  iconMap: {{}}
-  executionOrder: {{}}
-  defineConstraints: []
-  isPreloaded: 0
-  isOverridable: 0
-  isExplicitlyReferenced: {explicit}
-  validateReferences: 1
-  platformData:
-  - first:
-      Any:
-    second:
-      enabled: 1
-      settings: {{}}
-  userData:
-  assetBundleName:
-  assetBundleVariant:
-"""
-
-
-def restaurar_nuget(fork: Path) -> None:
+def restaurar_nuget(fork: Path, destino: Path | None = None) -> None:
     """Restaura os pacotes do Assets/packages.config (versões exatas) com o SDK .NET portátil e os
-    coloca em Assets/Packages da cópia, no formato do NuGetForUnity."""
+    coloca em Assets/Packages (da cópia, ou de outro projeto), no formato do NuGetForUnity.
+
+    Também serve para o próprio fork antes do primeiro build em modo batch: com erro de compilação o
+    editor não chega a rodar o NuGetForUnity, que é quem faria essa restauração."""
     pacotes = [(p.get("id"), p.get("version"))
                for p in ET.parse(fork / "Assets" / "packages.config").getroot().findall("package")
                if p.get("id") not in ("NETStandard.Library", "Microsoft.NETCore.Platforms")]
@@ -153,7 +131,7 @@ def restaurar_nuget(fork: Path) -> None:
                DOTNET_CLI_TELEMETRY_OPTOUT="1", DOTNET_NOLOGO="1")
     subprocess.run([str(RAIZ / "_tools" / "dotnet" / "dotnet.exe"), "restore", str(trabalho / "restore.csproj"), "-v", "q"],
                    env=env, check=True)
-    destino = PROJETO / "Assets" / "Packages"
+    destino = destino or PROJETO / "Assets" / "Packages"
     for pid, ver in pacotes:
         raiz_pkg = cache / pid.lower() / ver
         saida = destino / f"{pid}.{ver}"
@@ -171,13 +149,15 @@ def restaurar_nuget(fork: Path) -> None:
         alvo.mkdir(parents=True, exist_ok=True)
         for dll in dlls:
             shutil.copy2(dll, alvo / dll.name)
-            (alvo / (dll.name + ".meta")).write_text(
-                _META_PLUGIN.format(guid=uuid.uuid4().hex, explicit=1 if dll.name in EXPLICITAS else 0),
-                encoding="utf-8", newline="\n")
+            # Sem .meta: o editor gera o dele (Any Platform, referência automática). Um .meta escrito
+            # à mão fazia o Unity 6000.3/6000.6 ignorar a DLL sem avisar (testado em 29/09).
         print(f"NuGet: {pid} {ver} ({tfm or 'lib'})")
 
 
 def main() -> None:
+    if "--nuget-no-fork" in sys.argv:
+        restaurar_nuget(RAIZ / "YARG", RAIZ / "YARG" / "Assets" / "Packages")
+        return
     if "--nuget" in sys.argv:
         restaurar_nuget(RAIZ / "YARG")
         return
