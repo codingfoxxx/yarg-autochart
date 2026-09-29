@@ -14,7 +14,13 @@ Nada aqui toca no fork: só em _work/unity-compilecheck.
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
+import subprocess
+import sys
+import uuid
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
@@ -102,7 +108,79 @@ def remendos_codigo_do_jogo() -> None:
              [("GetInstanceID()", "GetHashCode()")])
 
 
+# Pastas do NuGet por ordem de preferência para o perfil .NET Framework do projeto (apiCompatibilityLevel 3),
+# parecido com a escolha do NuGetForUnity.
+_TFMS = ["net48", "net472", "net471", "net47", "net462", "net461", "net46", "net45",
+         "netstandard2.1", "netstandard2.0", "netstandard1.6", "netstandard1.4"]
+_META_PLUGIN = """fileFormatVersion: 2
+guid: {guid}
+PluginImporter:
+  externalObjects: {{}}
+  serializedVersion: 3
+  iconMap: {{}}
+  executionOrder: {{}}
+  defineConstraints: []
+  isPreloaded: 0
+  isOverridable: 0
+  isExplicitlyReferenced: {explicit}
+  validateReferences: 1
+  platformData:
+  - first:
+      Any:
+    second:
+      enabled: 1
+      settings: {{}}
+  userData:
+  assetBundleName:
+  assetBundleVariant:
+"""
+
+
+def restaurar_nuget(fork: Path) -> None:
+    """Restaura os pacotes do Assets/packages.config (versões exatas) com o SDK .NET portátil e os
+    coloca em Assets/Packages da cópia, no formato do NuGetForUnity."""
+    pacotes = [(p.get("id"), p.get("version"))
+               for p in ET.parse(fork / "Assets" / "packages.config").getroot().findall("package")
+               if p.get("id") not in ("NETStandard.Library", "Microsoft.NETCore.Platforms")]
+    trabalho = RAIZ / "_work" / "nuget-restore"
+    trabalho.mkdir(parents=True, exist_ok=True)
+    refs = "\n".join(f'    <PackageReference Include="{i}" Version="[{v}]" />' for i, v in pacotes)
+    (trabalho / "restore.csproj").write_text(
+        '<Project Sdk="Microsoft.NET.Sdk">\n  <PropertyGroup>\n    <TargetFramework>netstandard2.1</TargetFramework>\n'
+        f'  </PropertyGroup>\n  <ItemGroup>\n{refs}\n  </ItemGroup>\n</Project>\n', encoding="utf-8")
+    cache = RAIZ / "_tools" / "nuget-packages"
+    env = dict(os.environ, DOTNET_ROOT=str(RAIZ / "_tools" / "dotnet"), NUGET_PACKAGES=str(cache),
+               DOTNET_CLI_TELEMETRY_OPTOUT="1", DOTNET_NOLOGO="1")
+    subprocess.run([str(RAIZ / "_tools" / "dotnet" / "dotnet.exe"), "restore", str(trabalho / "restore.csproj"), "-v", "q"],
+                   env=env, check=True)
+    destino = PROJETO / "Assets" / "Packages"
+    for pid, ver in pacotes:
+        raiz_pkg = cache / pid.lower() / ver
+        saida = destino / f"{pid}.{ver}"
+        if (raiz_pkg / "content").exists():  # sqlite-net traz código-fonte, não DLL
+            (saida / "content").mkdir(parents=True, exist_ok=True)
+            for cs in (raiz_pkg / "content").glob("*.cs"):
+                shutil.copy2(cs, saida / "content" / cs.name)
+            continue
+        lib = raiz_pkg / "lib"
+        dlls, tfm = list(lib.glob("*.dll")), ""
+        if not dlls:
+            tfm = next(t for t in _TFMS if (lib / t).exists())
+            dlls = list((lib / tfm).glob("*.dll"))
+        alvo = saida / "lib" / tfm
+        alvo.mkdir(parents=True, exist_ok=True)
+        for dll in dlls:
+            shutil.copy2(dll, alvo / dll.name)
+            (alvo / (dll.name + ".meta")).write_text(
+                _META_PLUGIN.format(guid=uuid.uuid4().hex, explicit=1 if dll.name in EXPLICITAS else 0),
+                encoding="utf-8", newline="\n")
+        print(f"NuGet: {pid} {ver} ({tfm or 'lib'})")
+
+
 def main() -> None:
+    if "--nuget" in sys.argv:
+        restaurar_nuget(RAIZ / "YARG")
+        return
     dags = sorted((PROJETO / "Library" / "Bee").glob("*.dag.json"), key=lambda p: p.stat().st_mtime)
     nos = json.loads(dags[-1].read_text(encoding="utf-8"))["Nodes"]
     saida = next(n["Outputs"][0] for n in nos if n.get("Annotation", "").startswith("Csc "))

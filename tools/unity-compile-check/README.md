@@ -11,16 +11,18 @@ etapas "Csc", na ordem das dependências. Resultado: os mesmos erros de C# que o
 
 ## Uso
 
-Uma vez (cria a cópia só-de-scripts e o grafo; ~4 min):
+Uma vez (~5 min), com o Hub do Unity aberto:
 
-1. Copiar `Assets/{Script,Plugins,Editor,VLCUnity}`, `packages.config`, `NuGet.config`,
-   `ProjectSettings`, `Packages/manifest.json` e `packages-lock.json` do fork, e o
-   `YARG.Core/YARG.Core`, para `_work/unity-compilecheck` (o PROGRESS.md registra o comando).
-2. Abrir essa cópia com o Unity em modo batch (`Unity.exe -batchmode -nographics -quit -projectPath …`).
-   Ele falha por causa do Smart App Control, mas deixa o grafo pronto.
-3. Restaurar os pacotes NuGet do `packages.config` (`dotnet restore` de um projeto com as mesmas
-   versões) para `_work/unity-compilecheck/Assets/Packages`, como o NuGetForUnity faria.
-4. `python tools/unity-compile-check/preparar_copia.py` (referências do NuGet e remendos de versão).
+```
+tools\unity-compile-check\criar_copia.ps1
+```
+
+O script: copia `Assets/{Script,Plugins,Editor,VLCUnity}`, `packages.config`, `NuGet.config`,
+`ProjectSettings`, `Packages/manifest.json`, `packages-lock.json` e o `YARG.Core/YARG.Core` do fork
+para `_work/unity-compilecheck`; restaura os pacotes NuGet nas versões exatas do `packages.config`
+com o SDK .NET portátil (como o NuGetForUnity faria); abre a cópia no Unity em modo batch, que falha
+por causa do Smart App Control mas grava o grafo; e roda `preparar_copia.py` (referências do NuGet e
+remendos de versão).
 
 Depois, a cada mudança no fork:
 
