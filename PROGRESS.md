@@ -41,6 +41,7 @@
 - Gerar música: arrastar o áudio em `scripts\gerar-musica.bat`, ou `.venv\Scripts\python.exe -m autochart gerar <audio> --titulo … --artista …`.
 - Validar: `scripts\validar-musica.ps1 <pasta>`.
 - Testes: `.venv\Scripts\python.exe -m unittest discover -s autochart\tests` (24); testes .NET da engine e do fork: `scripts\testes-dotnet-conteiner.ps1` (34; precisa do Docker Desktop aberto; no Windows direto, `dotnet test tests\EngineTests` pode ser barrado pelo Smart App Control); testes do YARG.Core: `dotnet test YARG\YARG.Core\YARG.Core.UnitTests` (1 falha de cultura pt-BR, conhecida).
+- **Build do jogo** (depois de instalar o Unity 6000.3.5f2, com o Hub aberto): `scripts\build-jogo.ps1`. Confere os pré-requisitos, vigia o disco, repete uma vez se o NuGet ainda não tiver restaurado os pacotes e lista o que o Smart App Control bloquear. Saída em `_builds\YARG\YARG.exe`.
 - Verificar se o fork compila (sem o editor): `.venv\Scripts\python.exe tools\unity-compile-check\compilar.py --sincronizar-de YARG` (ver `tools/unity-compile-check/README.md`).
 
 ## Madrugada de 29/09 — o que foi feito (com números)
