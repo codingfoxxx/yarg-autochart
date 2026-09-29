@@ -1,7 +1,7 @@
 # PROGRESS — diário do projeto
 
 > Fonte de verdade para retomar o trabalho. Atualizado a cada etapa.
-> Última atualização: 2026-09-29 02:40 (horário de Brasília).
+> Última atualização: 2026-09-29 03:15 (horário de Brasília).
 
 ## Estado atual (resumo)
 
@@ -13,15 +13,25 @@
 | Auditoria da engine (sem Unity) | **Feita**: 25 testes (`tests/EngineTests`), relatório em `docs/auditoria-timing.md`; 2 bugs do upstream demonstrados |
 | Ferramenta autochart | **Funcionando** (`autochart/`): CLI, arrastar-e-soltar, relatório, validação no YARG.Core, 20 testes unitários |
 | Músicas de teste | **3 publicadas**: `samples/` + Release https://github.com/codingfoxxx/yarg-autochart/releases/tag/musicas-teste-v1 (pré-lançamento) |
-| Unity / build do jogo | **Bloqueado por disco** (ver abaixo) — próximo passo com o Lucas |
-| Eixo A no código do jogo | Não iniciado (precisa do Unity para compilar) |
+| Unity / build do jogo | **Bloqueado**: disco (ver abaixo) e, mais sério, o **Smart App Control barra o compilador do Unity** (testado com o 6000.6.3f1; ver abaixo) |
+| Eixo A no código do jogo | **Iniciado e publicado no fork** (`pessoal` @ `b728439c`): histerese nos gatilhos do controle; correção de `Keyboard.current` nulo. Compila (verificador próprio, 0 erros); sem teste no jogo rodando |
+| Testes .NET | 34/34 (engine + histerese) — rodam num contêiner Linux, porque o Windows passou a barrar a DLL de testes recompilada |
 | PLAYTEST.md / relatório final | Pendentes |
+
+## ⚠ Decisão importante para a manhã: Smart App Control × Unity
+
+Às 02:40 abri o fork com o Unity 6000.6.3f1 (o que o Hub instalou sozinho) em modo batch, numa cópia só com os scripts. A licença funcionou. A compilação **falhou sem nenhum erro de código**: o Windows (Smart App Control, política `VerifiedAndReputableDesktop`, eventos 3077) bloqueou DLLs sem assinatura que vêm **dentro do próprio Unity**, e sem elas o pipeline de compilação do Unity 6 não termina (`ApiUpdater.MovedFromExtractor.dll`, entre outras; detalhes no SECURITY_LOG.md).
+
+- Com o SAC ligado, **o Unity 6000.6.3f1 não compila nada nesta máquina**. O 6000.3.5f2 pode ou não ter o mesmo problema: a decisão do Windows é por arquivo, pela reputação na nuvem. Só dá para saber instalando.
+- O `YARG.exe` gerado também seria um executável sem assinatura (ver item 3 abaixo).
+- Opções: (a) instalar o 6000.3.5f2 e testar; se falhar igual, (b) desligar o SAC (decisão só sua; **irreversível** sem reinstalar o Windows; o Defender continua ativo) ou (c) compilar o jogo fora desta máquina (GitHub Actions com a sua licença do Unity cadastrada como segredo, feito por você) e, mesmo assim, o `YARG.exe` provavelmente seria barrado para rodar aqui.
+- Enquanto isso, o código do fork é verificado com `tools/unity-compile-check` (o compilador C# do Unity, que é assinado pela Microsoft, roda normalmente).
 
 ## Pendências que dependem do Lucas (manhã de 29/09)
 
-1. **Espaço em disco para o Unity.** Livres ~9 GB. O Hub instalou sozinho o Unity **6000.6.3f1** (8,4 GB, não usado pelo YARG). Desinstalar pelo Hub (Installs → ⋮ → Uninstall, pede UAC) libera o suficiente para o 6000.3.5f2 (~7 GB) + Library (~5-8 GB). Outra opção: o disco do Docker (26,5 GB; as imagens `precheck-*` são dele).
+1. **Espaço em disco para o Unity.** Livres 9,2 GB às 02:30. O espaço do jogo apagado foi consumido porque o Hub instalou sozinho o Unity **6000.6.3f1** entre 00:29 e 00:54 (8,4 GB, versão que o YARG não usa). Desinstalar pelo Hub (Installs → ⋮ → Uninstall, pede UAC) libera o suficiente para o 6000.3.5f2 (~7 GB) + Library (~5-8 GB). O disco do Docker (26,5 GB) não encolhe sozinho e tudo nele é dos projetos do Lucas (precheck, hasura, postgres), então não foi mexido.
 2. **Instalar o Unity 6000.3.5f2** (Hub: `unityhub://6000.3.5f2/3fa8bc678cb0`, sem VS/docs; pede UAC) e o **Blender 4.5.5 LTS** (MSI do blender.org; pede UAC). Ou autorizar alternativas sem admin.
-3. **Smart App Control**: o `YARG.exe` compilado localmente pode ser bloqueado (ver SECURITY_LOG.md). Se for, decidir: (a) manter o SAC e usarmos outra estratégia, ou (b) desligar o SAC (irreversível sem reinstalar o Windows). Não desligar sem ele decidir.
+3. **Smart App Control**: o `YARG.exe` compilado localmente **provavelmente será bloqueado**: no modelo de player do Unity, tudo é assinado menos o `WindowsPlayer.exe`, que vira o `YARG.exe` (ver SECURITY_LOG.md). Se for, decidir: (a) jogar pelo editor do Unity (assinado, funciona com o SAC), (b) desligar o SAC (irreversível sem reinstalar o Windows) ou (c) certificado de assinatura de código (pago). Não desligar sem ele decidir.
 4. **Executável público**: rebranding antes de publicar um build (LICENSES.md §1 e §6).
 5. **Moonscraper**: instalar (instalador verificado em `_downloads\`); pode ser barrado pelo SAC (sem assinatura).
 
@@ -30,7 +40,8 @@
 - Ambiente: `scripts\preparar-ambiente.ps1` (venv do lock + modelos com hash). .NET: `. scripts\dev-env.ps1`.
 - Gerar música: arrastar o áudio em `scripts\gerar-musica.bat`, ou `.venv\Scripts\python.exe -m autochart gerar <audio> --titulo … --artista …`.
 - Validar: `scripts\validar-musica.ps1 <pasta>`.
-- Testes: `.venv\Scripts\python.exe -m unittest discover -s autochart\tests`; `dotnet test tests\EngineTests`; testes do YARG.Core: `dotnet test YARG\YARG.Core\YARG.Core.UnitTests` (1 falha de cultura pt-BR, conhecida).
+- Testes: `.venv\Scripts\python.exe -m unittest discover -s autochart\tests` (24); testes .NET da engine e do fork: `scripts\testes-dotnet-conteiner.ps1` (34; precisa do Docker Desktop aberto; no Windows direto, `dotnet test tests\EngineTests` pode ser barrado pelo Smart App Control); testes do YARG.Core: `dotnet test YARG\YARG.Core\YARG.Core.UnitTests` (1 falha de cultura pt-BR, conhecida).
+- Verificar se o fork compila (sem o editor): `.venv\Scripts\python.exe tools\unity-compile-check\compilar.py --sincronizar-de YARG` (ver `tools/unity-compile-check/README.md`).
 
 ## Madrugada de 29/09 — o que foi feito (com números)
 
@@ -38,6 +49,8 @@
 - **Pilha de ML isolada**: sandbox Docker → 65 wheels do Windows com hash → `.venv` offline. **Smart App Control bloqueia torch 2.14** → torch/torchaudio **2.8.0**. Pesos locais com hash; Demucs só carrega se a classe nos metadados for a esperada.
 - **autochart**: batidas sub-quadro + fase pelos ataques; andamento único quando cabe no ruído (124,0 BPM exatos na música do Admiral Bob); deriva real seguida (165→176 BPM ao vivo no Aguaviva); compasso único com fase (3/4 no waltz); vocabulário rítmico por música (sem tercinas falsas); filtro de vazamento; validação no YARG.Core com conferência nota a nota do tipo strum/HOPO/tap.
 - **Resultados nas 3 músicas**: 0 violações; o scanner do jogo acha as 4 dificuldades; tipos de nota conferem 100%; jogador perfeito 100%; humano σ20 ms 99,9-100%; humano σ35 ms 95,7-97,9%.
+- **02:30–03:15, Eixo A:** Unity 6000.6.3f1 em modo batch → bloqueado pelo Smart App Control (acima). Verificador de compilação próprio com o Roslyn do Unity: as 116 assemblies do projeto compilam (0 erros) numa cópia com remendos de versão. **Histerese dos gatilhos** implementada no fork (configurável por controle; o preset do controle solta a 75% do ponto de acionamento, o padrão do Input System) com 9 testes na engine real: gatilho pairando em 0,5 ± 0,06 durante um sustain → sustain derrubado em 20/20 sem histerese, 0/20 com. **`Keyboard.current` nulo** corrigido em 2 lugares. Whammy revisado: o Input System já aplica deadzone de 12,5% no analógico, então não precisa mudar.
+- **Validação do autochart × Smart App Control:** o Windows passou a barrar DLLs recompiladas, de forma inconsistente (o validador foi barrado às 02:56 e aceito às 03:00). O autochart agora detecta o bloqueio e roda o mesmo validador num contêiner Linux oficial da Microsoft (9 s); sem Docker, marca "não executada" com o motivo.
 - **Vigia noturno** (`_work\vigia-noturno.ps1`, log em `_work\vigia-noturno.log`): mantém o PC acordado enquanto há trabalho; após 25 min ocioso suspende com despertador (02:05, 07:10); em problema grava `_work\PROBLEMA-PC.txt` e suspende sem despertar. Encerra às 11:00. **Regra do Lucas: se algo der errado com o PC, parar, suspender e esperar.**
 
 ## Decisões tomadas
@@ -54,12 +67,15 @@
 | 2026-09-29 | Validador via `dotnet test` | Smart App Control bloqueia DLL local como programa principal |
 | 2026-09-29 | Músicas publicadas sem stems separados | Pesos do Demucs "só para fins científicos" |
 | 2026-09-29 | Fórmula de compasso única por música | Tempos fortes do detector oscilam (39 mudanças falsas no waltz) |
+| 2026-09-29 | Histerese dos gatilhos = 0,75 do ponto de acionamento, só no preset de controle | Mesmo padrão do Input System do Unity; teste mostra fim das solturas fantasmas sem mudar o jogo com apertos completos; o resto dos controles fica igual ao upstream |
+| 2026-09-29 | Whammy do controle sem deadzone extra | O Input System já zera o analógico abaixo de 12,5% |
+| 2026-09-29 | Testes .NET no contêiner `mcr.microsoft.com/dotnet/sdk:10.0` | O Smart App Control barra DLLs de teste recompiladas; o contêiner não mexe na proteção |
 
 ## Próximos passos
 
-1. [ ] (Lucas) liberar disco + Unity 6000.3.5f2 + Blender; decidir sobre o Smart App Control se o `YARG.exe` for bloqueado.
+1. [ ] (Lucas) liberar disco + Unity 6000.3.5f2 + Blender; decidir sobre o Smart App Control se o Unity 6000.3.5f2 não compilar ou se o `YARG.exe` for bloqueado.
 2. [ ] Build de linha de comando do fork (`-batchmode -buildWindows64Player`), teste de fumaça (o jogo abre? acha as músicas de `songs\`?), medir FPS (PresentMon) e stutter.
-3. [ ] Eixo A no código: histerese de gatilho analógico (configurável), deadzone do whammy no preset de controle, `Keyboard.current` sem nulo, calibração guiada para controle (instruções pt-BR/en, salvar por perfil). Cada mudança com entrada no CHANGELOG-FORK.md.
+3. [x] Eixo A: histerese dos gatilhos (configurável), `Keyboard.current` sem nulo. [x] Whammy: não precisa (deadzone do Input System). [ ] Controle deslizante do ponto de soltura na tela de binds (prefab, precisa do editor). [ ] Calibração guiada para controle (instruções pt-BR/en, salvar por perfil).
 4. [ ] Testes de input no Unity (InputTestFixture com controle virtual de Xbox).
 5. [ ] PLAYTEST.md e relatório final (`RELATORIO-FINAL.md`), conferência do histórico git (sem marcas de IA).
 6. [ ] (opcional) PRs no upstream: os 2 bugs do YARG.Core e o teste de cultura.

@@ -94,6 +94,7 @@ Máquina: Windows 11 Home, Defender ativo (plataforma 4.18.26080.4, assinaturas 
 | 2026-09-29 | Vigia noturno (processo PowerShell oculto, `_work\vigia-noturno.ps1`) que impede a suspensão por ociosidade enquanto há trabalho, suspende o PC quando ocioso e pode registrar a tarefa agendada `GuitarHero-Despertar` (acordar o PC) | encerra sozinho às 11:00; criar `_work\parar-vigia.txt` para parar antes; `Unregister-ScheduledTask GuitarHero-Despertar` |
 | 2026-09-29 | Docker Desktop iniciado; o disco virtual `docker_data.vhdx` cresceu de 24,68 para 26,50 GB (imagem e camadas do sandbox) | remover a imagem `python:3.11-slim-bookworm` pelo Docker libera espaço dentro do disco virtual (o arquivo não encolhe sozinho) |
 | 2026-09-29 | `.venv` (Python 3.11, ~1,5 GB), `models\` (~130 MB), `_cache\stems` (~120 MB por música) | apagar as pastas |
+| 2026-09-29 | Cópia só-de-scripts do fork para verificar compilação (`_work\unity-compilecheck`, ~1,3 GB com a `Library` do Unity); imagem Docker do SDK .NET e volume `guitarhero-nuget` | apagar a pasta; `docker volume rm guitarhero-nuget`; `docker image rm mcr.microsoft.com/dotnet/sdk:10.0` |
 
 ## Downloads da madrugada de 29/09 (pilha do auto-charting e ferramentas)
 
@@ -111,6 +112,10 @@ Máquina: Windows 11 Home, Defender ativo (plataforma 4.18.26080.4, assinaturas 
 | 3 MP3 de teste (CC BY) | ccMixter e incompetech (páginas oficiais) | `e1a0ad8f…`, `a5ced5ab…`, `35e03b3e…` (LICENSES.md §5) | limpo | `_work\songsrc` |
 | Moonscraper Chart Editor 1.5.13 (instalador Win64) | github.com/FireFox2000000/Moonscraper-Chart-Editor (release oficial) | `30c5d0070cdfca7dc7b0f1c973468b12995ff3e14685a1308790257aa030fefe` = digest do GitHub; **sem assinatura digital** | limpo | `_downloads`; **não executado** (a instalação fica com o Lucas) |
 
+| Imagem Docker `mcr.microsoft.com/dotnet/sdk:10.0` | Microsoft Container Registry (imagem oficial) | digest `sha256:35d40304542c8689331f8cab17c65926cdf48fe711e289321d71924b230a7d29` (fixado nos scripts) | — | testes .NET e validador fora do Windows; volume `guitarhero-nuget` guarda o cache do NuGet |
+| Pacotes NuGet do jogo (FuzzySharp 2.0.2, ManagedBass* 3.1.1, Melanchall.DryWetMidi.Nativeless 7.0.0, Microsoft.IO.Redist 6.1.3, Microsoft.VisualStudio.SolutionPersistence 1.0.52, System.Diagnostics.Tracing 4.3.0, System.Runtime.CompilerServices.Unsafe 6.0.0, UniRx 5.4.1, ZString 2.5.1, sqlite-net 1.6.292) | nuget.org, via `dotnet restore` do SDK oficial (versões exatas do `Assets/packages.config` do YARG) | assinaturas de repositório do nuget.org verificadas pelo `dotnet restore` | — | `_tools\nuget-packages`; copiados para a cópia de verificação (`_work\unity-compilecheck\Assets\Packages`) |
+| Pacotes do Unity (UPM) do projeto | packages.unity.com, package.openupm.com, registry.npmjs.com e GitHub (pacotes git fixados por commit no `packages-lock.json` do YARG) | baixados pelo próprio editor do Unity; o 6000.6.3f1 trocou algumas versões (ex.: Input System 1.17.0 → 1.20.0, Cinemachine 2.10.5 → 6.6.0) | — | só na cópia de verificação (`Library\PackageCache`, ~1,2 GB, apagável) |
+
 ### Análise de risco dos pacotes e modelos
 
 - **Typosquatting:** os 65 nomes foram revisados. `httpx2`/`httpcore2` pareciam suspeitos (o pacote conhecido é `httpx`), mas são o sucessor mantido pela organização **verificada** da Pydantic (github.com/pydantic/httpx2, ~1,5 mil estrelas, releases batendo com o PyPI) e são exigidos pelo `huggingface_hub` 2.0.0 oficial.
@@ -124,4 +129,19 @@ Máquina: Windows 11 Home, Defender ativo (plataforma 4.18.26080.4, assinaturas 
 - Bloqueou as DLLs do **torch 2.14** (sem assinatura, sem reputação). Solução sem mexer na proteção: fixar **torch 2.8.0**, cujas DLLs são aceitas.
 - Bloqueia uma DLL .NET compilada aqui quando ela é o **programa principal** (`dotnet app.dll` ou o `.exe` gerado), mas não quando é carregada como **dependência** de um hospedeiro assinado pela Microsoft (`testhost`). Por isso o validador roda via `dotnet test`.
 - **Risco para o jogo:** o executável que o Unity gerar a partir do código (`YARG.exe`) será um binário novo, sem reputação, e pode ser bloqueado. Será verificado no primeiro build.
+  - Conferido no modelo de player do Unity instalado (6000.6.3f1, `win64_player_nondevelopment_mono`): `UnityPlayer.dll`, `UnityCrashHandler64.exe` e o runtime Mono (`mono-2.0-bdwgc.dll`) são assinados pela Unity Technologies SF; os plugins, pela AMD, NVIDIA e Microsoft. Só o **`WindowsPlayer.exe` não tem assinatura**, e é justamente ele que vira o `YARG.exe` (o build troca o ícone e as informações de versão, o que muda o hash). Conclusão: o bloqueio é provável; as DLLs gerenciadas (carregadas pelo Mono) provavelmente não são checadas.
+  - Se for bloqueado, as opções honestas são: (a) jogar pelo próprio editor do Unity (assinado), (b) o Lucas desligar o SAC (decisão dele, irreversível), (c) assinar o executável com um certificado de assinatura de código de verdade (pago). Contornos que usam programas do sistema para carregar o jogo não serão usados.
 - O Smart App Control **não deve ser desligado** sem decisão do Lucas: desligado, só volta reinstalando o Windows.
+
+#### Madrugada de 29/09, 02:38–03:05: o SAC também barra o **editor** do Unity
+
+- Teste: o Unity **6000.6.3f1** (instalado sozinho pelo Hub; o projeto usa 6000.3.5f2) aberto em modo batch numa cópia só-de-scripts do fork (`_work\unity-compilecheck`). Licença: funcionou pelo cliente de licenças do Hub (a ativação do Lucas), sem nada a mais.
+- Resultado: **"Scripts have compiler errors"** sem nenhum erro de C#. O log do Code Integrity (eventos 3077, política `VerifiedAndReputableDesktop` = Smart App Control) mostra o `dotnet.exe` do Unity impedido de carregar `ApiUpdater.MovedFromExtractor.dll` (486 vezes; o pipeline de compilação do Unity 6 roda essa ferramenta para cada assembly), `CommandLine.dll` (do AssemblyUpdater), `Unity.UIToolkit.SourceGenerator.dll` e `IlInterpreterAnalyzer.dll` (pacote `com.unity.pipeline`). Todas são DLLs **sem assinatura** que acompanham o próprio Unity. Outras DLLs sem assinatura do Unity (ex.: `Unity.SourceGenerators.dll`, `AssemblyUpdater.dll`) carregaram: a decisão é por arquivo, pela reputação na nuvem.
+- Consequência: **com o SAC ligado, o Unity 6000.6.3f1 não compila projeto nenhum nesta máquina.** Se o 6000.3.5f2 vai ter o mesmo problema, só se sabe instalando (as DLLs equivalentes dele podem ter reputação ou não).
+- O que **não** foi feito: nenhuma tentativa de fazer o Windows aceitar essas DLLs (nada de desligar, contornar ou "treinar" a proteção).
+- O que foi feito para continuar verificando o código: o compilador C# que o Unity usa (Roslyn do SDK .NET embutido, `csc.dll`/`VBCSCompiler.dll`, **assinados pela Microsoft**) roda normalmente; `tools/unity-compile-check` executa só as etapas de compilação do grafo de build que o editor gravou antes de falhar.
+
+#### DLLs .NET compiladas aqui: bloqueio inconsistente
+
+- 02:55: a `EngineTests.dll` recompilada (hash `2D5ABD7E…`) foi barrada ao ser carregada pelo `testhost.exe` (antes, nesta mesma noite, as versões anteriores carregavam). 02:56: o `Validator.dll` recompilado também foi barrado. 03:00: um novo build do `Validator.dll` **carregou normalmente**; a `EngineTests.dll` (mesmo hash) continuou barrada às 03:04.
+- Mitigações (sem mexer no SAC): (1) os testes .NET rodam num **contêiner Linux oficial da Microsoft** (`scripts/testes-dotnet-conteiner.ps1`, imagem `mcr.microsoft.com/dotnet/sdk:10.0`, digest abaixo); (2) o autochart, se o Windows barrar o validador, roda o mesmo validador no contêiner e, sem Docker, marca a validação como "não executada" com o motivo, em vez de acusar erro no chart.

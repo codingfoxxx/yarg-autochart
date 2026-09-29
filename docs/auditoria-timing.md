@@ -43,8 +43,8 @@ Observação de desenho (não é bug): `EngineParameters.SongSpeed` nasce 0 e s�
 
 Ver `docs/pesquisa/mapa-input-engine.md`. Confirmados pela leitura:
 
-- **Gatilhos analógicos sem histerese** (`ButtonBinding.cs:85`): `pressionado = valor ≥ 0,5`. Com gatilho parado perto do meio, pode haver pressões/solturas fantasmas; o debounce de 5 ms só filtra oscilações muito rápidas.
-- **Whammy**: qualquer evento do eixo reinicia o timer, e a deadzone padrão do binding é 0.
+- **Gatilhos analógicos sem histerese** (`ButtonBinding.cs:85`): `pressionado = valor ≥ 0,5`. Com gatilho parado perto do meio, pode haver pressões/solturas fantasmas; o debounce de 5 ms só filtra oscilações muito rápidas. **Corrigido no fork** (histerese configurável; preset do controle solta a 37,5%). Teste `AnalogTriggerTests` com a engine real e um gatilho XInput simulado (250 Hz, 8 bits): dedo pairando em 0,5 ± 0,06 durante um sustain → sem histerese o sustain caiu em 20 de 20 execuções (504 solturas falsas); com histerese, em 0 de 20. Aperto/soltura completos: resultado idêntico com e sem histerese.
+- **Whammy** (revisado depois de ler o código do Input System; li a versão 1.20, que o Unity 6000.6 baixou na cópia de verificação; o projeto usa a 1.17, a conferir quando o 6000.3.5f2 estiver instalado): qualquer evento do eixo reinicia o timer e a deadzone do binding é 0, **mas** os eixos do analógico (`leftStick/x`) já passam pelo processador `axisDeadzone` do Input System (mínimo 0,125 neste projeto). O ruído do analógico em repouso vira 0 antes de chegar ao binding, então não gera star power. Só um analógico com desvio acima de 12,5% (controle gasto) geraria eventos. Sem mudança no fork.
 - **Latência de áudio contada duas vezes** no modo compartilhado com calibração 0 e "Account for hardware latency" ligado. Pode compensar por acaso latências não modeladas; a calibração neutraliza; não será alterado sem medição.
 - `Keyboard.current` sem checagem de nulo em `GameManager.Update`.
 - Parsing de números dependente do idioma do Windows nos bindings e campos de texto.
