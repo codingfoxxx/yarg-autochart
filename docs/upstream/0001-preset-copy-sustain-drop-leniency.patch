@@ -1,0 +1,20 @@
+diff --git a/YARG.Core/Game/Presets/EnginePreset.Instruments.cs b/YARG.Core/Game/Presets/EnginePreset.Instruments.cs
+index 2106ab1c..f0ff796d 100644
+--- a/YARG.Core/Game/Presets/EnginePreset.Instruments.cs
++++ b/YARG.Core/Game/Presets/EnginePreset.Instruments.cs
+@@ -139,6 +139,7 @@ namespace YARG.Core.Game
+                     SoloTaps = SoloTaps,
+                     NoStarPowerOverlap = NoStarPowerOverlap,
+                     EnableLanes = EnableLanes,
++                    SustainDropLeniency = SustainDropLeniency,
+                 };
+             }
+ 
+@@ -359,6 +360,7 @@ namespace YARG.Core.Game
+                     ChordStaggerWindow = ChordStaggerWindow,
+                     FatFingerWindow = FatFingerWindow,
+                     EnableLanes = EnableLanes,
++                    SustainDropLeniency = SustainDropLeniency,
+                     HitWindow = HitWindow.Copy(),
+                 };
+             }

@@ -404,6 +404,35 @@ public class FiveFretTimingTests
     }
 
     /// <summary>
+    /// Outra face do mesmo trecho de GuitarEngine.Overstrum: ele não confere HasFinishedScoring. Perto do
+    /// fim do sustain (a partir de Resolution/4 ticks antes, o "burst"), todos os pontos já foram somados;
+    /// um overstrum nesse intervalo soma os pontos de novo. Afirma o comportamento correto e hoje FALHA.
+    /// </summary>
+    [Test, Explicit("Problema conhecido do upstream (GuitarEngine.Overstrum)"), Category("KnownIssue")]
+    public void KnownIssue_OverstrumAfterSustainBurst_DoesNotCountThePointsTwice()
+    {
+        var notes = Enumerable.Range(0, 30).Select(i => new ChartNote(4 + i * 0.5, i % 2 == 0 ? "G" : "R")).ToList();
+        notes.Add(new ChartNote(20, "Y", LengthBeats: 8)); // termina na batida 28; burst 125 ms antes
+        string chart = ChartText.Build(120, notes);
+
+        Rig Run(bool overstrumNearEnd)
+        {
+            var rig = new Rig(chart);
+            var inputs = PlayerSim.Play(rig.Chart).Where(i => i.Time < Sec(20) - 0.1).ToList();
+            var tail = new Inputs().Press(Sec(20) - 0.02, Y).Strum(Sec(20));
+            if (overstrumNearEnd) tail.Strum(Sec(28) - 0.06);  // depois do burst, antes do fim
+            tail.Release(Sec(29), Y);
+            rig.Play(inputs.Concat(tail.Build()).OrderBy(i => i.Time).ToList(), 240);
+            return rig;
+        }
+
+        var held = Run(overstrumNearEnd: false);
+        var overstrummed = Run(overstrumNearEnd: true);
+        TestContext.Out.WriteLine($"segurou: {held.Summary()} | overstrum no fim: {overstrummed.Summary()}");
+        Assert.That(overstrummed.Stats.TotalScore, Is.EqualTo(held.Stats.TotalScore));
+    }
+
+    /// <summary>
     /// Suspeita #8 (confirmada no código): FiveFretGuitarPreset.Copy() não copia SustainDropLeniency,
     /// então "Copy of ..." no menu de presets volta esse valor ao padrão. Hoje FALHA.
     /// </summary>

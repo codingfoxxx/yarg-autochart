@@ -1,0 +1,73 @@
+diff --git a/YARG.Core/Engine/BaseEngine.Generic.cs b/YARG.Core/Engine/BaseEngine.Generic.cs
+index 4f171c6a..11ad6e1e 100644
+--- a/YARG.Core/Engine/BaseEngine.Generic.cs
++++ b/YARG.Core/Engine/BaseEngine.Generic.cs
+@@ -1423,6 +1423,34 @@ namespace YARG.Core.Engine
+             return sustain.BaseScore + deltaScore;
+         }
+ 
++        /// <summary>
++        /// Commits the points of a sustain broken early (overstrum/overhit) the same way <see cref="UpdateSustains"/>
++        /// commits a dropped sustain: with the score multiplier and counted in SustainScore. Does nothing if the
++        /// sustain has already finished scoring (burst), so its points aren't counted twice.
++        /// </summary>
++        protected void CommitBrokenSustainPoints(ref ActiveSustain<TNoteType> sustain, uint tick)
++        {
++            if (sustain.HasFinishedScoring)
++            {
++                return;
++            }
++
++            double finalScore = CalculateSustainPoints(ref sustain, tick);
++            var points = (int) Math.Ceiling(finalScore);
++
++            AddScore(points);
++
++            // SustainPoints must include the multiplier, but NOT the star power multiplier
++            int sustainPoints = points * EngineStats.ScoreMultiplier;
++            if (EngineStats.IsStarPowerActive)
++            {
++                sustainPoints /= 2;
++            }
++
++            EngineStats.SustainScore += sustainPoints;
++            sustain.HasFinishedScoring = true;
++        }
++
+         protected void AdvanceToNextNote(TNoteType note)
+         {
+             NoteIndex++;
+diff --git a/YARG.Core/Engine/Guitar/GuitarEngine.cs b/YARG.Core/Engine/Guitar/GuitarEngine.cs
+index 4876e597..1e74f474 100644
+--- a/YARG.Core/Engine/Guitar/GuitarEngine.cs
++++ b/YARG.Core/Engine/Guitar/GuitarEngine.cs
+@@ -180,9 +180,9 @@ namespace YARG.Core.Engine.Guitar
+                 YargLogger.LogFormatTrace("Ended sustain (end time: {0}) at {1}", sustain.GetEndTime(SyncTrack, 0), CurrentTime);
+                 i--;
+ 
+-                double finalScore = CalculateSustainPoints(ref sustain, CurrentTick);
+-                EngineStats.CommittedScore += (int) Math.Ceiling(finalScore);
+-                OnSustainEnd?.Invoke(sustain.Note, CurrentTime, sustain.HasFinishedScoring);
++                bool finishedScoring = sustain.HasFinishedScoring;
++                CommitBrokenSustainPoints(ref sustain, CurrentTick);
++                OnSustainEnd?.Invoke(sustain.Note, CurrentTime, finishedScoring);
+             }
+ 
+             if (NoteIndex < Notes.Count)
+diff --git a/YARG.Core/Engine/Keys/KeysEngine.cs b/YARG.Core/Engine/Keys/KeysEngine.cs
+index 448dea10..210969b9 100644
+--- a/YARG.Core/Engine/Keys/KeysEngine.cs
++++ b/YARG.Core/Engine/Keys/KeysEngine.cs
+@@ -165,9 +165,9 @@ namespace YARG.Core.Engine.Keys
+                 YargLogger.LogFormatTrace("Ended sustain (end time: {0}) at {1}", sustain.GetEndTime(SyncTrack, 0), CurrentTime);
+                 i--;
+ 
+-                double finalScore = CalculateSustainPoints(ref sustain, CurrentTick);
+-                EngineStats.CommittedScore += (int) Math.Ceiling(finalScore);
+-                OnSustainEnd?.Invoke(sustain.Note, CurrentTime, sustain.HasFinishedScoring);
++                bool finishedScoring = sustain.HasFinishedScoring;
++                CommitBrokenSustainPoints(ref sustain, CurrentTick);
++                OnSustainEnd?.Invoke(sustain.Note, CurrentTime, finishedScoring);
+             }
+ 
+             if (NoteIndex < Notes.Count)
