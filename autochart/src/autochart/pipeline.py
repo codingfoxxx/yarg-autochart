@@ -219,6 +219,8 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
         step("validação no YARG.Core", t0)
         if yarg_check is None:
             log("  aviso: validador do YARG.Core indisponível (precisa do .NET SDK e de tools/validator)")
+        elif yarg_check.get("ok") is None:
+            log("  aviso: validação no YARG.Core não executada: " + yarg_check.get("indisponivel", ""))
         elif not yarg_check.get("ok"):
             violations.append("validação no YARG.Core: " + (yarg_check.get("erro") or "falhou (ver validacao-yarg.json)"))
     nps = [stats[d]["nps_media"] for d in ("Easy", "Medium", "Hard", "Expert") if d in stats and stats[d].get("notas")]

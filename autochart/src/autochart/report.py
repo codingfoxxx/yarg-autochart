@@ -165,9 +165,13 @@ def write_report(folder: Path, data: dict) -> None:
     lines += ["", "## Validação no YARG.Core (o código do jogo)", ""]
     if y is None:
         lines.append("- Não executada (validador indisponível).")
+    elif y.get("ok") is None:
+        lines.append(f"- Não executada: {y.get('indisponivel', 'motivo desconhecido')}.")
     else:
         lines.append(f"- Resultado: **{'OK' if y.get('ok') else 'FALHOU'}**"
                      + (f" — {y['erro']}" if y.get("erro") else ""))
+        if y.get("executado_em", "Windows") != "Windows":
+            lines.append(f"- Executada em: {y['executado_em']}.")
         if y.get("dificuldades_no_jogo"):
             lines.append(f"- Encontrada pelo scanner de músicas do jogo; dificuldades: {', '.join(y['dificuldades_no_jogo'])}.")
         if y.get("por_dificuldade"):
