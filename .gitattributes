@@ -17,3 +17,4 @@
 *.wav binary
 *.flac binary
 *.opus binary
+*.patch -text
