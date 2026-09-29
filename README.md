@@ -8,14 +8,16 @@ Ferramentas e documentação do meu fork pessoal do [YARG](https://github.com/YA
 
 | Pasta | Conteúdo | Estado |
 |---|---|---|
-| `autochart/` | Gerador de charts: recebe um áudio (mp3/ogg/wav/flac) e cria uma pasta de música pronta para o YARG, com as 4 dificuldades | em construção |
-| `tools/validator/` | Validador em .NET que usa o próprio YARG.Core para carregar e "jogar" o chart gerado | em construção |
-| `tests/` | Testes automatizados da engine de 5 trastes (inputs com tempo) e da ferramenta | em construção |
-| `scripts/` | Atalhos: arrastar um áudio para gerar a música, setup, build | em construção |
-| `docs/pesquisa/` | Pesquisa da Fase 0 (formato de música, input/engine, estado da arte, músicas livres) | pronto |
-| `YARG/` | O fork do jogo, como submódulo git | — |
+| `autochart/` | Gerador de charts: recebe um áudio (mp3/ogg/wav/flac) e cria uma pasta de música pronta para o YARG, com as 4 dificuldades, relatório de qualidade e validação no código do jogo ([README](autochart/README.md)) | funcionando |
+| `samples/` | 3 músicas Creative Commons com charts gerados e relatórios (áudio no Release) | pronto |
+| `tools/validator/` | Validador em .NET que usa o próprio YARG.Core para carregar e "jogar" o chart gerado | funcionando |
+| `tools/unity-compile-check/` | Confere se o código do fork compila sem o editor do Unity (útil com o Smart App Control) | funcionando |
+| `tests/` | Testes da engine de 5 trastes com inputs temporizados, da histerese dos gatilhos e da calibração do fork (.NET), e da ferramenta (Python) | 43 + 26 testes |
+| `scripts/` | Arrastar um áudio para gerar a música, preparar o ambiente, validar, testes em contêiner, build do jogo | funcionando |
+| `docs/` | Pesquisa da Fase 0 e auditoria de timing da engine | pronto |
+| `YARG/` | O fork do jogo, como submódulo git ([mudanças](https://github.com/codingfoxxx/YARG/blob/pessoal/CHANGELOG-FORK.md)) | código pronto, build pendente |
 
-Documentos do projeto: [DECISION.md](DECISION.md) (decisões e justificativas), [PROGRESS.md](PROGRESS.md) (diário), [SECURITY_LOG.md](SECURITY_LOG.md) (tudo que foi baixado e verificado) e LICENSES.md (licenças).
+Documentos do projeto: [PLAYTEST.md](PLAYTEST.md) (roteiro de teste com o controle), [DECISION.md](DECISION.md) (decisões e justificativas), [PROGRESS.md](PROGRESS.md) (diário), [SECURITY_LOG.md](SECURITY_LOG.md) (tudo que foi baixado e verificado) e [LICENSES.md](LICENSES.md) (licenças).
 
 ## Músicas
 
