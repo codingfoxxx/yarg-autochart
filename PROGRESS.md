@@ -80,7 +80,7 @@
 2. [ ] Build de linha de comando do fork (`-batchmode -buildWindows64Player`), teste de fumaça (o jogo abre? acha as músicas de `songs\`?), medir FPS (PresentMon) e stutter.
 3. [x] Eixo A: histerese dos gatilhos (configurável), `Keyboard.current` sem nulo. [x] Whammy: não precisa (deadzone do Input System). [x] Calibração guiada para controle (instruções pt-BR/en, 2 passadas, salvar no perfil ou global). [ ] Controle deslizante do ponto de soltura na tela de binds (prefab, precisa do editor). [ ] Conferir no jogo: textos da calibração cabem na tela, fluxo com o controle.
 4. [ ] Testes de input no Unity (InputTestFixture com controle virtual de Xbox).
-5. [ ] PLAYTEST.md e relatório final (`RELATORIO-FINAL.md`), conferência do histórico git (sem marcas de IA).
+5. [x] PLAYTEST.md. [x] Conferência do histórico git em 29/09 03:27: 22 commits no yarg-autochart e 9 no fork (`275e9a13..pessoal`), todos "Lucas Raposo", nenhuma marca de IA nas mensagens nem nos arquivos. [ ] Relatório final (`RELATORIO-FINAL.md`) quando o jogo tiver sido testado.
 6. [ ] (opcional) PRs no upstream: os 2 bugs do YARG.Core e o teste de cultura.
 
 ## Problemas e observações
