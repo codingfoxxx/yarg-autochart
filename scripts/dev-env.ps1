@@ -1,4 +1,4 @@
-# Carrega o ambiente de desenvolvimento do projeto na sessão atual do PowerShell:
+﻿# Carrega o ambiente de desenvolvimento do projeto na sessão atual do PowerShell:
 #   . C:\Dev\GuitarHero\scripts\dev-env.ps1
 # Usa o .NET SDK portátil de _tools\dotnet (instalado pelo projeto) e guarda os pacotes
 # NuGet dentro da pasta do projeto.

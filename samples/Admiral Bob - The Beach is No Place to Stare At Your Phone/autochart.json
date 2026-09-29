@@ -1,0 +1,295 @@
+{
+  "versao": "0.1.0",
+  "gerado_em": "2026-09-29T02:24:17",
+  "tempo_total_s": 15.7,
+  "musica": {
+    "titulo": "The Beach is No Place to Stare At Your Phone",
+    "artista": "Admiral Bob",
+    "album": "",
+    "ano": "2019",
+    "genero": "Surf Blues",
+    "diff_guitar": 2
+  },
+  "entrada": {
+    "arquivo": "admiralbob77_-_The_Beach_is_No_Place_to_Stare_At_Your_Phone.mp3",
+    "sha256": "e1a0ad8fa223ac242164682b8eddb6f844956cef8a91acec2d2c05ffe1de79b1",
+    "duracao_s": 177.46
+  },
+  "parametros": {
+    "fonte": "guitarra",
+    "densidade": 1.0,
+    "sensibilidade": 0.5,
+    "stems": false,
+    "dispositivo": "cpu",
+    "dificuldades": [
+      "Expert",
+      "Hard",
+      "Medium",
+      "Easy"
+    ],
+    "silencio_inicial_min": 1.5,
+    "validar": true,
+    "tolerancia_grid": 0.008,
+    "fonte_usada": "guitarra"
+  },
+  "grid": {
+    "bpm_min": 124.0,
+    "bpm_max": 124.0,
+    "bpm_mediana": 124.0,
+    "mudancas_de_tempo": 1,
+    "compasso": "4/4",
+    "anacruse": 3,
+    "mudancas_de_compasso": 0,
+    "erro_batida_mediana_ms": 5.4,
+    "erro_batida_p95_ms": 15.1,
+    "silencio_inicial_s": 1.46,
+    "avisos": [],
+    "correcao_de_fase_ms": -9.1,
+    "batidas_com_ataque_pct": 93.1
+  },
+  "analise": {
+    "ataques": 429,
+    "notas_transcritas": 1238,
+    "eventos": 665,
+    "altura_detectada_pct": 98.3,
+    "descartados_por_vazamento": 0,
+    "quantizacao_erro_mediano_ms": 20.8,
+    "quantizacao_erro_p95_ms": 54.6,
+    "ritmo": "semínimas, colcheias",
+    "evidencia_subdivisoes_pct": {
+      "4": 0.0,
+      "3": 0.0,
+      "6": 0.0,
+      "8": 0.0
+    }
+  },
+  "alinhamento": {
+    "nota_ao_evento_mediana_ms": 20.8,
+    "nota_ao_evento_p95_ms": 54.6,
+    "notas_ate_25ms_pct": 61.9,
+    "notas_ate_50ms_pct": 91.2,
+    "notas_so_da_transcricao_pct": 31.6,
+    "nota_ao_ataque_mediana_ms": 17.6,
+    "nota_ao_ataque_p95_ms": 51.1,
+    "ataques_fortes_cobertos_pct": 92.0
+  },
+  "dificuldades": {
+    "Expert": {
+      "notas": 624,
+      "nps_media": 3.62,
+      "nps_pico_2s": 6.5,
+      "acordes_pct": 25.0,
+      "sustains_pct": 10.3,
+      "hopo_pct": 25.2,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 118,
+        "vermelho": 180,
+        "amarelo": 213,
+        "azul": 173,
+        "laranja": 115
+      },
+      "consistencia_riffs_pct": 100.0
+    },
+    "Hard": {
+      "notas": 506,
+      "nps_media": 2.94,
+      "nps_pico_2s": 4.5,
+      "acordes_pct": 30.0,
+      "sustains_pct": 12.5,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 108,
+        "vermelho": 143,
+        "amarelo": 169,
+        "azul": 141,
+        "laranja": 97
+      },
+      "consistencia_riffs_pct": 0.0
+    },
+    "Medium": {
+      "notas": 288,
+      "nps_media": 1.67,
+      "nps_pico_2s": 2.5,
+      "acordes_pct": 31.2,
+      "sustains_pct": 7.3,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 76,
+        "vermelho": 119,
+        "amarelo": 97,
+        "azul": 86,
+        "laranja": 0
+      },
+      "consistencia_riffs_pct": 83.3
+    },
+    "Easy": {
+      "notas": 135,
+      "nps_media": 0.78,
+      "nps_pico_2s": 1.5,
+      "acordes_pct": 0.0,
+      "sustains_pct": 14.1,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 38,
+        "vermelho": 58,
+        "amarelo": 39,
+        "azul": 0,
+        "laranja": 0
+      },
+      "consistencia_riffs_pct": 40.0
+    }
+  },
+  "violacoes": [],
+  "validacao_yarg": {
+    "ok": true,
+    "rejeitada": "",
+    "dificuldades_no_jogo": [
+      "Easy",
+      "Medium",
+      "Hard",
+      "Expert"
+    ],
+    "por_dificuldade": {
+      "Easy": {
+        "notas": 135,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 96.3,
+        "estrelas_humano_35ms": 4.47
+      },
+      "Medium": {
+        "notas": 288,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.9,
+        "estrelas_humano_35ms": 4.87
+      },
+      "Hard": {
+        "notas": 506,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.6,
+        "estrelas_humano_35ms": 4.68
+      },
+      "Expert": {
+        "notas": 624,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 95.7,
+        "estrelas_humano_35ms": 4.76
+      }
+    }
+  },
+  "densidade_monotonica": true,
+  "star_power": [
+    [
+      2880,
+      673
+    ],
+    [
+      14400,
+      673
+    ],
+    [
+      19008,
+      577
+    ],
+    [
+      28992,
+      673
+    ],
+    [
+      33696,
+      577
+    ],
+    [
+      45120,
+      673
+    ],
+    [
+      49728,
+      673
+    ],
+    [
+      62016,
+      481
+    ]
+  ],
+  "secoes": [
+    [
+      0,
+      "Parte A"
+    ],
+    [
+      2880,
+      "Parte A (2)"
+    ],
+    [
+      6720,
+      "Parte A (3)"
+    ],
+    [
+      19008,
+      "Parte A (4)"
+    ],
+    [
+      22080,
+      "Parte A (5)"
+    ],
+    [
+      28992,
+      "Parte A (6)"
+    ],
+    [
+      33600,
+      "Parte A (7)"
+    ],
+    [
+      36672,
+      "Parte A (8)"
+    ],
+    [
+      42048,
+      "Parte A (9)"
+    ],
+    [
+      49728,
+      "Parte A (10)"
+    ],
+    [
+      62016,
+      "Parte A (11)"
+    ],
+    [
+      65088,
+      "Parte A (12)"
+    ]
+  ],
+  "tempos_s": {
+    "decodificação": 0.2,
+    "batidas (Beat This!)": 4.1,
+    "fase do grid": 2.5,
+    "separação (cache)": 0.8,
+    "ataques (onsets)": 0.8,
+    "alturas (Basic Pitch)": 1.9,
+    "chart (dificuldades, star power, seções)": 0.4,
+    "áudio (ogg)": 2.0,
+    "validação no YARG.Core": 1.9
+  },
+  "versoes": {
+    "torch": "2.8.0",
+    "beat-this": "1.1.0",
+    "demucs": "4.1.0",
+    "librosa": "0.11.0",
+    "basic-pitch": "0.4.0",
+    "numpy": "2.4.6"
+  }
+}

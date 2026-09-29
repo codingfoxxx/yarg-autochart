@@ -1,0 +1,297 @@
+{
+  "versao": "0.1.0",
+  "gerado_em": "2026-09-29T02:24:33",
+  "tempo_total_s": 14.7,
+  "musica": {
+    "titulo": "Attack of the Aguaviva",
+    "artista": "Blue_Wave_Theory",
+    "album": "",
+    "ano": "2016",
+    "genero": "Surf Rock",
+    "diff_guitar": 3
+  },
+  "entrada": {
+    "arquivo": "Blue_Wave_Theory_-_Attack_of_the_Aguaviva.mp3",
+    "sha256": "a5ced5ab869fb302d3e229df76a52e21bdec3381a8c8634704f6af0b2111b4c4",
+    "duracao_s": 149.68
+  },
+  "parametros": {
+    "fonte": "guitarra",
+    "densidade": 1.0,
+    "sensibilidade": 0.5,
+    "stems": false,
+    "dispositivo": "cpu",
+    "dificuldades": [
+      "Expert",
+      "Hard",
+      "Medium",
+      "Easy"
+    ],
+    "silencio_inicial_min": 1.5,
+    "validar": true,
+    "tolerancia_grid": 0.008,
+    "fonte_usada": "guitarra"
+  },
+  "grid": {
+    "bpm_min": 139.33,
+    "bpm_max": 175.28,
+    "bpm_mediana": 169.8,
+    "mudancas_de_tempo": 19,
+    "compasso": "4/4",
+    "anacruse": 2,
+    "mudancas_de_compasso": 0,
+    "erro_batida_mediana_ms": 6.8,
+    "erro_batida_p95_ms": 25.7,
+    "silencio_inicial_s": 0.77,
+    "avisos": [
+      "batidas corrigidas: 4 espúrias removidas, 25 inseridas (das quais 24 em trecho de meio tempo)"
+    ],
+    "correcao_de_fase_ms": -9.3,
+    "batidas_com_ataque_pct": 78.3
+  },
+  "analise": {
+    "ataques": 528,
+    "notas_transcritas": 1396,
+    "eventos": 740,
+    "altura_detectada_pct": 82.6,
+    "descartados_por_vazamento": 0,
+    "quantizacao_erro_mediano_ms": 24.6,
+    "quantizacao_erro_p95_ms": 54.7,
+    "ritmo": "semínimas, colcheias",
+    "evidencia_subdivisoes_pct": {
+      "4": 0.0,
+      "3": 0.0,
+      "6": 0.0,
+      "8": 0.0
+    }
+  },
+  "alinhamento": {
+    "nota_ao_evento_mediana_ms": 24.6,
+    "nota_ao_evento_p95_ms": 54.7,
+    "notas_ate_25ms_pct": 51.6,
+    "notas_ate_50ms_pct": 93.1,
+    "notas_so_da_transcricao_pct": 20.8,
+    "nota_ao_ataque_mediana_ms": 23.3,
+    "nota_ao_ataque_p95_ms": 52.1,
+    "ataques_fortes_cobertos_pct": 94.4
+  },
+  "dificuldades": {
+    "Expert": {
+      "notas": 640,
+      "nps_media": 4.5,
+      "nps_pico_2s": 8.5,
+      "acordes_pct": 15.3,
+      "sustains_pct": 3.8,
+      "hopo_pct": 12.2,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 134,
+        "vermelho": 160,
+        "amarelo": 214,
+        "azul": 156,
+        "laranja": 96
+      },
+      "consistencia_riffs_pct": 55.6
+    },
+    "Hard": {
+      "notas": 556,
+      "nps_media": 3.91,
+      "nps_pico_2s": 6.0,
+      "acordes_pct": 16.5,
+      "sustains_pct": 4.5,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 122,
+        "vermelho": 133,
+        "amarelo": 173,
+        "azul": 125,
+        "laranja": 95
+      },
+      "consistencia_riffs_pct": 38.5
+    },
+    "Medium": {
+      "notas": 320,
+      "nps_media": 2.25,
+      "nps_pico_2s": 3.0,
+      "acordes_pct": 21.2,
+      "sustains_pct": 9.1,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 97,
+        "vermelho": 103,
+        "amarelo": 98,
+        "azul": 90,
+        "laranja": 0
+      },
+      "consistencia_riffs_pct": 57.7
+    },
+    "Easy": {
+      "notas": 150,
+      "nps_media": 1.06,
+      "nps_pico_2s": 1.5,
+      "acordes_pct": 0.0,
+      "sustains_pct": 14.0,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 42,
+        "vermelho": 48,
+        "amarelo": 60,
+        "azul": 0,
+        "laranja": 0
+      },
+      "consistencia_riffs_pct": 50.0
+    }
+  },
+  "violacoes": [],
+  "validacao_yarg": {
+    "ok": true,
+    "rejeitada": "",
+    "dificuldades_no_jogo": [
+      "Easy",
+      "Medium",
+      "Hard",
+      "Expert"
+    ],
+    "por_dificuldade": {
+      "Easy": {
+        "notas": 150,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 96.7,
+        "estrelas_humano_35ms": 4.38
+      },
+      "Medium": {
+        "notas": 320,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.8,
+        "estrelas_humano_35ms": 4.92
+      },
+      "Hard": {
+        "notas": 556,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.8,
+        "estrelas_humano_35ms": 4.76
+      },
+      "Expert": {
+        "notas": 640,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 96.6,
+        "estrelas_humano_35ms": 4.54
+      }
+    }
+  },
+  "densidade_monotonica": true,
+  "star_power": [
+    [
+      2688,
+      673
+    ],
+    [
+      13440,
+      673
+    ],
+    [
+      21120,
+      673
+    ],
+    [
+      31872,
+      673
+    ],
+    [
+      37248,
+      721
+    ],
+    [
+      41088,
+      673
+    ],
+    [
+      49536,
+      721
+    ],
+    [
+      62592,
+      721
+    ],
+    [
+      68736,
+      673
+    ]
+  ],
+  "secoes": [
+    [
+      0,
+      "Parte A"
+    ],
+    [
+      2688,
+      "Parte A (2)"
+    ],
+    [
+      13440,
+      "Parte A (3)"
+    ],
+    [
+      21120,
+      "Parte A (4)"
+    ],
+    [
+      33408,
+      "Parte A (5)"
+    ],
+    [
+      38016,
+      "Parte A (6)"
+    ],
+    [
+      41088,
+      "Parte A (7)"
+    ],
+    [
+      48768,
+      "Parte A (8)"
+    ],
+    [
+      62592,
+      "Parte A (9)"
+    ],
+    [
+      68736,
+      "Parte A (10)"
+    ],
+    [
+      74112,
+      "Parte A (11)"
+    ]
+  ],
+  "tempos_s": {
+    "decodificação": 0.2,
+    "batidas (Beat This!)": 4.1,
+    "fase do grid": 2.4,
+    "separação (cache)": 0.7,
+    "ataques (onsets)": 0.6,
+    "alturas (Basic Pitch)": 1.5,
+    "chart (dificuldades, star power, seções)": 0.4,
+    "áudio (ogg)": 1.8,
+    "validação no YARG.Core": 1.9
+  },
+  "versoes": {
+    "torch": "2.8.0",
+    "beat-this": "1.1.0",
+    "demucs": "4.1.0",
+    "librosa": "0.11.0",
+    "basic-pitch": "0.4.0",
+    "numpy": "2.4.6"
+  }
+}

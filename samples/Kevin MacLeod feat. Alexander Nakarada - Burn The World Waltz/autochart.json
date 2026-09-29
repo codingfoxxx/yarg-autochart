@@ -1,0 +1,339 @@
+{
+  "versao": "0.1.0",
+  "gerado_em": "2026-09-29T02:24:50",
+  "tempo_total_s": 17.0,
+  "musica": {
+    "titulo": "Burn The World Waltz",
+    "artista": "Kevin MacLeod feat. Alexander Nakarada",
+    "album": "",
+    "ano": "2021",
+    "genero": "Metal",
+    "diff_guitar": 3
+  },
+  "entrada": {
+    "arquivo": "Burn The World Waltz.mp3",
+    "sha256": "35e03b3e014536029d69119ae649441bce84e77fa29c87ce1f44825639e0c2aa",
+    "duracao_s": 200.07
+  },
+  "parametros": {
+    "fonte": "guitarra",
+    "densidade": 1.0,
+    "sensibilidade": 0.5,
+    "stems": false,
+    "dispositivo": "cpu",
+    "dificuldades": [
+      "Expert",
+      "Hard",
+      "Medium",
+      "Easy"
+    ],
+    "silencio_inicial_min": 1.5,
+    "validar": true,
+    "tolerancia_grid": 0.008,
+    "fonte_usada": "guitarra"
+  },
+  "grid": {
+    "bpm_min": 174.24,
+    "bpm_max": 176.46,
+    "bpm_mediana": 175.02,
+    "mudancas_de_tempo": 7,
+    "compasso": "3/4",
+    "anacruse": 1,
+    "mudancas_de_compasso": 0,
+    "erro_batida_mediana_ms": 3.7,
+    "erro_batida_p95_ms": 10.9,
+    "silencio_inicial_s": 1.43,
+    "avisos": [],
+    "correcao_de_fase_ms": -4.4,
+    "batidas_com_ataque_pct": 81.0
+  },
+  "analise": {
+    "ataques": 619,
+    "notas_transcritas": 1167,
+    "eventos": 769,
+    "altura_detectada_pct": 74.4,
+    "descartados_por_vazamento": 0,
+    "quantizacao_erro_mediano_ms": 20.4,
+    "quantizacao_erro_p95_ms": 56.0,
+    "ritmo": "semínimas, colcheias",
+    "evidencia_subdivisoes_pct": {
+      "4": 0.0,
+      "3": 0.0,
+      "6": 0.0,
+      "8": 48.9
+    }
+  },
+  "alinhamento": {
+    "nota_ao_evento_mediana_ms": 20.4,
+    "nota_ao_evento_p95_ms": 56.0,
+    "notas_ate_25ms_pct": 58.3,
+    "notas_ate_50ms_pct": 91.2,
+    "notas_so_da_transcricao_pct": 18.8,
+    "nota_ao_ataque_mediana_ms": 20.8,
+    "nota_ao_ataque_p95_ms": 56.6,
+    "ataques_fortes_cobertos_pct": 85.1
+  },
+  "dificuldades": {
+    "Expert": {
+      "notas": 760,
+      "nps_media": 3.95,
+      "nps_pico_2s": 7.5,
+      "acordes_pct": 16.6,
+      "sustains_pct": 2.6,
+      "hopo_pct": 8.3,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 104,
+        "vermelho": 164,
+        "amarelo": 283,
+        "azul": 254,
+        "laranja": 86
+      },
+      "consistencia_riffs_pct": 48.0
+    },
+    "Hard": {
+      "notas": 669,
+      "nps_media": 3.48,
+      "nps_pico_2s": 6.0,
+      "acordes_pct": 17.3,
+      "sustains_pct": 2.5,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 100,
+        "vermelho": 142,
+        "amarelo": 247,
+        "azul": 214,
+        "laranja": 82
+      },
+      "consistencia_riffs_pct": 24.2
+    },
+    "Medium": {
+      "notas": 443,
+      "nps_media": 2.31,
+      "nps_pico_2s": 3.0,
+      "acordes_pct": 18.5,
+      "sustains_pct": 2.9,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 105,
+        "vermelho": 169,
+        "amarelo": 134,
+        "azul": 117,
+        "laranja": 0
+      },
+      "consistencia_riffs_pct": 55.7
+    },
+    "Easy": {
+      "notas": 195,
+      "nps_media": 1.02,
+      "nps_pico_2s": 1.5,
+      "acordes_pct": 0.0,
+      "sustains_pct": 8.7,
+      "hopo_pct": 0.0,
+      "tap_pct": 0.0,
+      "trastes": {
+        "verde": 43,
+        "vermelho": 75,
+        "amarelo": 77,
+        "azul": 0,
+        "laranja": 0
+      },
+      "consistencia_riffs_pct": 55.6
+    }
+  },
+  "violacoes": [],
+  "validacao_yarg": {
+    "ok": true,
+    "rejeitada": "",
+    "dificuldades_no_jogo": [
+      "Easy",
+      "Medium",
+      "Hard",
+      "Expert"
+    ],
+    "por_dificuldade": {
+      "Easy": {
+        "notas": 195,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.4,
+        "estrelas_humano_35ms": 4.69
+      },
+      "Medium": {
+        "notas": 443,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.5,
+        "estrelas_humano_35ms": 4.67
+      },
+      "Hard": {
+        "notas": 669,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 100,
+        "humano_35ms_pct": 97.5,
+        "estrelas_humano_35ms": 4.75
+      },
+      "Expert": {
+        "notas": 760,
+        "tipos_conferem": true,
+        "perfeito_pct": 100,
+        "humano_20ms_pct": 99.9,
+        "humano_35ms_pct": 96.7,
+        "estrelas_humano_35ms": 4.65
+      }
+    }
+  },
+  "densidade_monotonica": true,
+  "star_power": [
+    [
+      1920,
+      481
+    ],
+    [
+      14016,
+      193
+    ],
+    [
+      23808,
+      529
+    ],
+    [
+      27840,
+      481
+    ],
+    [
+      34752,
+      193
+    ],
+    [
+      40512,
+      529
+    ],
+    [
+      48000,
+      529
+    ],
+    [
+      54912,
+      385
+    ],
+    [
+      63552,
+      481
+    ],
+    [
+      75648,
+      529
+    ],
+    [
+      79680,
+      481
+    ],
+    [
+      84288,
+      433
+    ],
+    [
+      92928,
+      529
+    ],
+    [
+      99264,
+      481
+    ]
+  ],
+  "secoes": [
+    [
+      0,
+      "Parte A"
+    ],
+    [
+      1920,
+      "Parte B"
+    ],
+    [
+      7104,
+      "Parte B (2)"
+    ],
+    [
+      9408,
+      "Parte B (3)"
+    ],
+    [
+      14016,
+      "Parte B (4)"
+    ],
+    [
+      16320,
+      "Parte B (5)"
+    ],
+    [
+      25536,
+      "Parte B (6)"
+    ],
+    [
+      27840,
+      "Parte B (7)"
+    ],
+    [
+      37056,
+      "Parte B (8)"
+    ],
+    [
+      54912,
+      "Parte B (9)"
+    ],
+    [
+      61248,
+      "Parte B (10)"
+    ],
+    [
+      63552,
+      "Parte B (11)"
+    ],
+    [
+      68160,
+      "Parte B (12)"
+    ],
+    [
+      70464,
+      "Parte B (13)"
+    ],
+    [
+      79680,
+      "Parte B (14)"
+    ],
+    [
+      81984,
+      "Parte B (15)"
+    ],
+    [
+      91200,
+      "Parte B (16)"
+    ]
+  ],
+  "tempos_s": {
+    "decodificação": 0.2,
+    "batidas (Beat This!)": 4.6,
+    "fase do grid": 2.6,
+    "separação (cache)": 0.9,
+    "ataques (onsets)": 0.8,
+    "alturas (Basic Pitch)": 2.0,
+    "chart (dificuldades, star power, seções)": 0.5,
+    "áudio (ogg)": 2.3,
+    "validação no YARG.Core": 1.9
+  },
+  "versoes": {
+    "torch": "2.8.0",
+    "beat-this": "1.1.0",
+    "demucs": "4.1.0",
+    "librosa": "0.11.0",
+    "basic-pitch": "0.4.0",
+    "numpy": "2.4.6"
+  }
+}

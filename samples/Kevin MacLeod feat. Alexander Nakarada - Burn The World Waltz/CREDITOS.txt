@@ -1,0 +1,10 @@
+﻿CRÉDITOS / CREDITS
+
+Música (áudio): "Burn The World Waltz" (feat. Alexander Nakarada) Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 4.0 License https://creativecommons.org/licenses/by/4.0/
+Licença do áudio: CC BY 4.0. Fonte oficial: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Burn%20The%20World%20Waltz%20.mp3
+Arquivo original (SHA-256): 35e03b3e014536029d69119ae649441bce84e77fa29c87ce1f44825639e0c2aa
+
+Modificações no áudio: decodificado e regravado em Ogg Vorbis (song.ogg), com 1.43 s de silêncio acrescentados no início. Nenhuma outra alteração.
+Chart (notes.chart), song.ini e relatório: gerados automaticamente pela ferramenta autochart (https://github.com/codingfoxxx/yarg-autochart), sem edição manual. São obra derivada do áudio acima e seguem a mesma licença (CC BY 4.0), com crédito ao autor original.
+
+This folder contains a Creative Commons licensed song (CC BY 4.0) and an automatically generated chart (derivative work). The audio was converted to Ogg Vorbis and 1.43 s of silence were added at the beginning.

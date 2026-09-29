@@ -1,0 +1,139 @@
+{
+  "ok": true,
+  "musicas": [
+    {
+      "pasta": "C:\\Dev\\GuitarHero\\_builds\\musicas-teste\\Admiral Bob - The Beach is No Place to Stare At Your Phone",
+      "nome": "The Beach is No Place to Stare At Your Phone",
+      "artista": "Admiral Bob",
+      "dificuldades": [
+        "Easy",
+        "Medium",
+        "Hard",
+        "Expert"
+      ],
+      "por_dificuldade": {
+        "Easy": {
+          "notas": 135,
+          "acordes": 0,
+          "sustains": 19,
+          "star_power": 8,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 135,
+              "pontos": 26810,
+              "estrelas": 5.61
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 135,
+              "pontos": 26810,
+              "estrelas": 5.61
+            },
+            "humano_35ms": {
+              "acertos_pct": 96.3,
+              "overstrums": 5,
+              "combo_max": 65,
+              "pontos": 16396,
+              "estrelas": 4.47
+            }
+          }
+        },
+        "Medium": {
+          "notas": 288,
+          "acordes": 90,
+          "sustains": 21,
+          "star_power": 8,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 288,
+              "pontos": 74929,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 288,
+              "pontos": 74929,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.9,
+              "overstrums": 6,
+              "combo_max": 79,
+              "pontos": 55401,
+              "estrelas": 4.87
+            }
+          }
+        },
+        "Hard": {
+          "notas": 506,
+          "acordes": 152,
+          "sustains": 63,
+          "star_power": 8,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 506,
+              "pontos": 133495,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 506,
+              "pontos": 133495,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.6,
+              "overstrums": 12,
+              "combo_max": 97,
+              "pontos": 90607,
+              "estrelas": 4.68
+            }
+          }
+        },
+        "Expert": {
+          "notas": 624,
+          "acordes": 156,
+          "sustains": 64,
+          "star_power": 8,
+          "tipos": "SSSSSHSHHSSSSSHHSSSSHHSHSSSSSSSSHSSSHSHSHHSSSSSSSSSSSHSHHSSSSSSSSHSHHHSHSSHSSSSHHHSSHSHSHSSSHHSSSSSHHSSHSSSHHSSSSSSHSHSSSSSHSSSSHSSHHHSSSSHSSHHSSSHHSSSSSSSSHHSSSHHSHSSSSSSHSSSSSHHSHSSSHSSHSSSSSSSSSSSSSSSSSSHSSSSHSSHHSSSSSHSHHSSSSHSHHSSSSHHSSSSSHSSSSSSHSSHSHSHSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSHSSHSHSHHSHSSSSSSHSSHSSHHSSSSSSSSHHSSSSSHHHSSSSSSSSSSSSSHSSSSSHSSHSSSSSSHSSSSSSSSSHSSHSSHSSSSSHSSSSSSSSHSSSSSHHSSSSHSHSSHSSHHHSSSSSHSSSSSSHSSSSSHHSHSSSSSHSSHSSSSSSSSSHHSSSHSSSSSHSHHSHSHHSSSSSSSSSHSHSHHSSSSSSSSSHSHSHHSHSSSSSSSHSSSSSSSSSSSSSSSSHSSHHSSSSSSSSHSHSHSSHHSSSSSSSSHSHSHHHSSSSSSHHHSSSSSSSSSSSHSSSSSSSSSSSSHSSHSSSSHSSSHHSSSHSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 624,
+              "pontos": 161964,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 624,
+              "pontos": 161964,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 95.7,
+              "overstrums": 8,
+              "combo_max": 168,
+              "pontos": 114305,
+              "estrelas": 4.76
+            }
+          }
+        }
+      }
+    }
+  ],
+  "rejeitadas": ""
+}

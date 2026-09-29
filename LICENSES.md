@@ -77,7 +77,22 @@ A lista final, com versões e hashes, fica no `requirements` travado da ferramen
 
 ## 5. Músicas de teste
 
-Ainda não baixadas. Cada música entra aqui com: título, artista, licença (com trecho literal e link da página oficial), URL de download, SHA-256 do arquivo original, e o texto de crédito exigido. Candidatas em [docs/pesquisa/musicas-livres.md](docs/pesquisa/musicas-livres.md).
+Licenças conferidas nas páginas oficiais em 2026-09-29. Áudio só no GitHub Releases (nunca no git); charts, `song.ini`, relatórios e créditos em [`samples/`](samples/). Os stems separados pelo Demucs **não** são publicados (só o mix original, convertido).
+
+| Música | Artista | Licença (trecho literal, página oficial) | Download oficial | SHA-256 do original |
+|---|---|---|---|---|
+| The Beach is No Place to Stare At Your Phone (2019, surf blues, 124 BPM) | Admiral Bob | "Creative Commons Attribution (3.0)" — https://ccmixter.org/files/admiralbob77/60529 | https://ccmixter.org/content/admiralbob77/admiralbob77_-_The_Beach_is_No_Place_to_Stare_At_Your_Phone.mp3 | `e1a0ad8fa223ac242164682b8eddb6f844956cef8a91acec2d2c05ffe1de79b1` |
+| Attack of the Aguaviva (2016, surf rock, ~170 BPM) | Blue_Wave_Theory | "Creative Commons Attribution (3.0)" — https://ccmixter.org/files/Blue_Wave_Theory/54205 | https://ccmixter.org/content/Blue_Wave_Theory/Blue_Wave_Theory_-_Attack_of_the_Aguaviva.mp3 | `a5ced5ab869fb302d3e229df76a52e21bdec3381a8c8634704f6af0b2111b4c4` |
+| Burn The World Waltz (2021, metal em 3/4, 177 BPM) | Kevin MacLeod feat. Alexander Nakarada | "Licensed under Creative Commons: By Attribution 4.0" — https://incompetech.com/music/royalty-free/faq.html | https://incompetech.com/music/royalty-free/mp3-royaltyfree/Burn%20The%20World%20Waltz%20.mp3 | `35e03b3e014536029d69119ae649441bce84e77fa29c87ce1f44825639e0c2aa` |
+
+Créditos exigidos (estão no `CREDITOS.txt` de cada pasta):
+- `"The Beach is No Place to Stare At Your Phone" by Admiral Bob, 2019 - Licensed under Creative Commons Attribution (3.0), https://creativecommons.org/licenses/by/3.0/, https://ccmixter.org/files/admiralbob77/60529`
+- `"Attack of the Aguaviva" by Blue_Wave_Theory, 2016 - Licensed under Creative Commons Attribution (3.0), https://creativecommons.org/licenses/by/3.0/, https://ccmixter.org/files/Blue_Wave_Theory/54205`
+- `"Burn The World Waltz" (feat. Alexander Nakarada) Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 4.0 License https://creativecommons.org/licenses/by/4.0/`
+
+Modificações declaradas: áudio convertido para Ogg Vorbis com silêncio inicial acrescentado (0,77–1,46 s); chart gerado automaticamente (obra derivada, mesma licença do áudio). O Kevin MacLeod pede que os créditos deixem claro o que foi modificado: está no `CREDITOS.txt`.
+
+Observação: o download direto do ccMixter exige o cabeçalho `Referer` da página da música (proteção contra links externos); é o mesmo que o botão de download envia.
 
 ## 6. Pendências de licença (para decidir com o Lucas)
 

@@ -1,0 +1,139 @@
+{
+  "ok": true,
+  "musicas": [
+    {
+      "pasta": "C:\\Dev\\GuitarHero\\_builds\\musicas-teste\\Kevin MacLeod feat. Alexander Nakarada - Burn The World Waltz",
+      "nome": "Burn The World Waltz",
+      "artista": "Kevin MacLeod feat. Alexander Nakarada",
+      "dificuldades": [
+        "Easy",
+        "Medium",
+        "Hard",
+        "Expert"
+      ],
+      "por_dificuldade": {
+        "Easy": {
+          "notas": 195,
+          "acordes": 0,
+          "sustains": 17,
+          "star_power": 14,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 195,
+              "pontos": 38683,
+              "estrelas": 5.61
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 195,
+              "pontos": 38683,
+              "estrelas": 5.61
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.4,
+              "overstrums": 5,
+              "combo_max": 65,
+              "pontos": 26406,
+              "estrelas": 4.69
+            }
+          }
+        },
+        "Medium": {
+          "notas": 443,
+          "acordes": 82,
+          "sustains": 13,
+          "star_power": 14,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 443,
+              "pontos": 103413,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 443,
+              "pontos": 103413,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.5,
+              "overstrums": 11,
+              "combo_max": 97,
+              "pontos": 70055,
+              "estrelas": 4.67
+            }
+          }
+        },
+        "Hard": {
+          "notas": 669,
+          "acordes": 116,
+          "sustains": 17,
+          "star_power": 14,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 669,
+              "pontos": 156118,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 669,
+              "pontos": 156118,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.5,
+              "overstrums": 17,
+              "combo_max": 128,
+              "pontos": 109602,
+              "estrelas": 4.75
+            }
+          }
+        },
+        "Expert": {
+          "notas": 760,
+          "acordes": 126,
+          "sustains": 20,
+          "star_power": 14,
+          "tipos": "SSSSSSSSSSSHSSSSSHSSSSSHSSSSSSSSHSSSSSHSSSSSSSSSSHHSSSSSSSSSSSSSSSHSSSSSHSSSSSHSSSSSSSHSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSHSSHHSSSSSSHSSSSSSSSSHHSSSSSSSSSSSSSHSSSSSSHHSHSSSSSHSSSSSSSSHSSHSSSSSHSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSHSSHSSSSSSSSSSSSSSHSHSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSHHHSSSSSHSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSHHSSSSSSSSSSSSSSHHSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSHSSSHSSSSSSSSSSHSSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSHSSSSHSSSSSSSSSSSSSSHHSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSHSSHSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 760,
+              "pontos": 177666,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 99.9,
+              "overstrums": 1,
+              "combo_max": 671,
+              "pontos": 174366,
+              "estrelas": 5.55
+            },
+            "humano_35ms": {
+              "acertos_pct": 96.7,
+              "overstrums": 21,
+              "combo_max": 128,
+              "pontos": 119373,
+              "estrelas": 4.65
+            }
+          }
+        }
+      }
+    }
+  ],
+  "rejeitadas": ""
+}

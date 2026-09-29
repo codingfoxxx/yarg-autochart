@@ -1,0 +1,139 @@
+{
+  "ok": true,
+  "musicas": [
+    {
+      "pasta": "C:\\Dev\\GuitarHero\\_builds\\musicas-teste\\Blue_Wave_Theory - Attack of the Aguaviva",
+      "nome": "Attack of the Aguaviva",
+      "artista": "Blue_Wave_Theory",
+      "dificuldades": [
+        "Easy",
+        "Medium",
+        "Hard",
+        "Expert"
+      ],
+      "por_dificuldade": {
+        "Easy": {
+          "notas": 150,
+          "acordes": 0,
+          "sustains": 21,
+          "star_power": 9,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 150,
+              "pontos": 31834,
+              "estrelas": 5.61
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 150,
+              "pontos": 31834,
+              "estrelas": 5.61
+            },
+            "humano_35ms": {
+              "acertos_pct": 96.7,
+              "overstrums": 5,
+              "combo_max": 65,
+              "pontos": 18574,
+              "estrelas": 4.38
+            }
+          }
+        },
+        "Medium": {
+          "notas": 320,
+          "acordes": 68,
+          "sustains": 29,
+          "star_power": 9,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 320,
+              "pontos": 79222,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 320,
+              "pontos": 79222,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.8,
+              "overstrums": 7,
+              "combo_max": 97,
+              "pontos": 59651,
+              "estrelas": 4.92
+            }
+          }
+        },
+        "Hard": {
+          "notas": 556,
+          "acordes": 92,
+          "sustains": 25,
+          "star_power": 9,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 556,
+              "pontos": 131018,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 556,
+              "pontos": 131018,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 97.8,
+              "overstrums": 12,
+              "combo_max": 97,
+              "pontos": 92437,
+              "estrelas": 4.76
+            }
+          }
+        },
+        "Expert": {
+          "notas": 640,
+          "acordes": 98,
+          "sustains": 24,
+          "star_power": 9,
+          "tipos": "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHHSSSSHHSSSHSSSHSSSHSSSHSSSSSSSHSSHHSSSSSHSSSHHHSSSSSSSSSSSSSSSSSSSSHSSSSSHSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSHSSSSHSSSSSSHSSSSSSHSHSSHHSSHSHHHHSSHSHSSSHSSSHSHSSSSSSSSHHHSHSHHSSSSHSSSSSSSSSHSSHHSSSSSSSSSSSSSSSSSSSSSSSSSSSSHHSSSHHSSSSSHSHSSSHHSSSHHSSHSSSSHSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSSSSSSSSHHHSSSSSSSSHSHSSHSSSHSSHSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSHSHSSSSSSSSSSSHSSSSSSSHSSHSHSSSSSSSSH",
+          "simulacao": {
+            "perfeito": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 640,
+              "pontos": 153294,
+              "estrelas": 5.6
+            },
+            "humano_20ms": {
+              "acertos_pct": 100,
+              "overstrums": 0,
+              "combo_max": 640,
+              "pontos": 153294,
+              "estrelas": 5.6
+            },
+            "humano_35ms": {
+              "acertos_pct": 96.6,
+              "overstrums": 10,
+              "combo_max": 90,
+              "pontos": 97719,
+              "estrelas": 4.54
+            }
+          }
+        }
+      }
+    }
+  ],
+  "rejeitadas": ""
+}
