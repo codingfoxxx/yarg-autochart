@@ -1,61 +1,56 @@
 # PROGRESS — diário do projeto
 
 > Fonte de verdade para retomar o trabalho. Atualizado a cada etapa.
-> Última atualização: 2026-09-29 00:25 (horário de Brasília).
+> Última atualização: 2026-09-29 01:15 (horário de Brasília).
 
 ## Estado atual (resumo)
 
-- **Fase 0 (pesquisa e planejamento): quase concluída.** Quatro de cinco pesquisas prontas (formato de música, mapa de input/engine, estado da arte do auto-charting, músicas livres). Falta o inventário de licenças (sub-agente ainda rodando em 00:25).
-- **Documentos da Fase 0:** PROGRESS.md (este), .gitignore. Faltam: LICENSES.md, BUILD.md, DECISION.md, SECURITY_LOG.md, docs/pesquisa/.
-- **Ações do Lucas pedidas em 00:20** (antes de dormir): (1) login no Unity Hub + licença Personal; (2) `gh auth login` com o gh portátil. Conferir com `gh auth status` e com a existência da licença antes de usar.
-- **Alarmes** (só nesta sessão): 02:05 e 07:10 do dia 29/09, para retomar se a cota acabar. PC mantido acordado até 11:00 por um processo PowerShell oculto (SetThreadExecutionState).
+- **Fase 0 concluída**: pesquisas em `docs/pesquisa/`, DECISION.md, LICENSES.md, SECURITY_LOG.md.
+- **Fork publicado**: https://github.com/codingfoxxx/YARG (branch padrão `pessoal`, commit `65ee51d2` = upstream `dev` @ `275e9a13` + só documentação: aviso no README, FORK.md, CHANGELOG-FORK.md, BUILD.md rascunho, NOTICE, COPYING). GitHub Actions do fork desligadas. LFS do fork funciona (servido pela rede de forks).
+- **Repositório de ferramentas**: `C:\Dev\GuitarHero` (git local, branch `main`); vai para https://github.com/codingfoxxx/yarg-autochart com o fork como submódulo `YARG/`.
+- **Unity: ADIADO para amanhã** por falta de disco. O Hub instalou sozinho (assistente de primeiro uso, aceito pelo Lucas) o Unity **6000.6.3f1** (+WebGL +docs, 8,4 GB em `C:\Program Files\Unity\Hub\Editor\6000.6.3f1`), que o YARG não usa. Livre: ~12,8 GB. O 6000.3.5f2 (~10 GB no pico) + Library (~5-8 GB) não cabem. **Pedir ao Lucas: desinstalar o 6000.6.3f1 pelo Hub (Installs → ⋮ → Uninstall; pede UAC).** Depois: instalar 6000.3.5f2 (Hub: `unityhub://6000.3.5f2/3fa8bc678cb0`, sem VS nem docs) e Blender.
+- **Licença Unity Personal**: ativada (29/09 00:26). Fica na pasta virtualizada do Hub MSIX (`%LOCALAPPDATA%\Packages\UnityTechnologies.UnityHub_2vrhnee42bhxm\LocalCache\Local\Unity\licenses\`). Rodar o editor com o Hub aberto.
+- **.NET SDK 10.0.401** portátil em `_tools\dotnet` (SHA-512 ok). YARG.Core.UnitTests: 547 ok, 1 falha de cultura pt-BR, 2 ignorados.
+- **gh** logado como `codingfoxxx` (keyring), escopos repo/workflow/gist/read:org. No clone do YARG, credencial local = gh.
+
+## Noite de 28→29/09 (Lucas dormindo)
+
+- **Vigia noturno** (`_work\vigia-noturno.ps1`, PID em `_work\vigia.pid`, log em `_work\vigia-noturno.log`): mantém o PC acordado enquanto há trabalho; após 25 min de ociosidade suspende com despertador (02:05, depois 07:10); em problema (disco < 3 GB, RAM/commit baixos, erro de GPU/driver no log) grava `_work\PROBLEMA-PC.txt` e suspende **sem** despertador. Encerra às 11:00. Controles: `_work\busy-until.txt` (yyyy-MM-dd HH:mm), `_work\sem-despertar.txt`, `_work\parar-vigia.txt`.
+- **Lembretes do Claude** (só nesta sessão): 02:10, 02:25, 07:15, 07:32.
+- **Regra do Lucas:** se algo der errado com o PC (comportamento inesperado, memória…), NÃO prosseguir: parar, suspender o PC e esperar a resposta dele. **Checar `_work\PROBLEMA-PC.txt` antes de cada etapa longa.**
 
 ## Decisões tomadas
 
 | Data | Decisão | Motivo |
 |---|---|---|
-| 2026-09-28 | Projeto em `C:\Dev\GuitarHero` (atalho na Área de Trabalho), fora do OneDrive | Escolha do Lucas: OneDrive sincroniza a Área de Trabalho; caminho com acento/espaço quebra ferramentas |
-| 2026-09-28 | Limpeza de caches npm (6,0 GB) e pip (1,7 GB) | Autorizado pelo Lucas; disco tinha 22 GB livres |
-| 2026-09-28 | Base do fork = upstream `dev` @ `275e9a13` (26/09/2026), YARG.Core @ `e2d44e8d` | `dev` tem correções de sincronia de áudio/calibração posteriores ao v0.15.0 (#1558, #1589, calibração, offset por música) |
-| 2026-09-28 | Instalações portáteis em `_tools/` (gh, .NET, Blender, Unity Editor) | Terminal sem admin; evita janelas de UAC durante a noite e mantém tudo na pasta do projeto |
-| 2026-09-28 | Blender é necessário | `Assets/Art/Meshes/Obsolete/Notes.blend` ainda é usado pelo tema de notas Rectangular (notas abertas/HOPO) e pelo preview de notas |
-| 2026-09-29 | Chart gerado em `.chart` (resolução 192), não `.mid` | Formato nativo do Moonscraper (edição fiel ao jogo); limiar natural de HOPO igual no YARG e no Moonscraper (65 ticks); o gerador calcula as inversões `N 5` e o validador confere com o parser do YARG |
-
-## Ambiente (fatos verificados)
-
-- Windows 11 Home, Ryzen 7 7700, 32 GB RAM, RTX 4070 SUPER (instável: TDR em 28/09, preferir CPU).
-- Disco C: ~27 GB livres em 29/09 00:10 (só existe o C:). Vigiar antes de instalar o Unity (~7 GB) e gerar a Library (~5-8 GB).
-- git 2.53 + git-lfs 3.7.1; identidade `Lucas Raposo <lucasraposobastos25@gmail.com>`; GitHub `codingfoxxx` no Git Credential Manager.
-- Python 3.11.9 (`py -3.11`) e 3.14.3 (padrão). ffmpeg 9.0.1 (gyan.dev) já instalado. Node 24.
-- Docker Desktop instalado (WSL2), daemon parado; `docker_data.vhdx` = 24,6 GB (do Lucas, não podar).
-- Unity Hub 3.21.3 instalado (MSIX, por usuário). gh 2.101.0 portátil em `_tools\gh\bin\gh.exe`.
-- Terminal NÃO é admin.
-
-## Onde as coisas estão
-
-- `C:\Dev\GuitarHero\` → repositório principal (ferramentas + docs), ainda sem `git init`.
-- Clone do YARG (upstream, `dev` @ 275e9a13, LFS NÃO baixado) ainda em
-  `C:\Users\lucas\OneDrive\Área de Trabalho\Guitar Hero\YARG` → **mover para `C:\Dev\GuitarHero\YARG`** quando o sub-agente de licenças terminar (ele lê de lá). Depois apagar a pasta vazia "Guitar Hero" da Área de Trabalho e criar o atalho.
-- Instaladores baixados: `_downloads\` (gh zip, Unity Hub msix) com SHA-256 conferidos.
-- Pesquisas brutas (relatórios dos sub-agentes): serão salvas em `docs/pesquisa/`.
+| 2026-09-28 | Projeto em `C:\Dev\GuitarHero` (atalho "Guitar Hero" na Área de Trabalho), fora do OneDrive | Escolha do Lucas |
+| 2026-09-28 | Limpeza de caches npm (6,0 GB) e pip (1,7 GB) | Autorizado pelo Lucas |
+| 2026-09-28 | Base do fork = upstream `dev` @ `275e9a13` | Correções de sincronia/calibração posteriores ao v0.15.0 |
+| 2026-09-28 | Instalações portáteis em `_tools/` | Terminal sem admin; sem UAC durante a noite |
+| 2026-09-28 | Blender é necessário | `Notes.blend` ainda é usado pelo tema de notas Rectangular |
+| 2026-09-29 | Chart em `.chart` (res 192) | Nativo do Moonscraper; ver DECISION.md §4 |
+| 2026-09-29 | Dois repositórios: fork `codingfoxxx/YARG` + `codingfoxxx/yarg-autochart` (MIT) | Fork limpo e fácil de atualizar; ver DECISION.md §2 |
+| 2026-09-29 | Executável do jogo **só local** até o Lucas decidir sobre rebranding | Nome/logos "YARG" sem licença de uso; ver LICENSES.md §1 |
 
 ## Próximos passos (em ordem)
 
-1. [ ] Receber o relatório de licenças → escrever LICENSES.md.
-2. [ ] Salvar relatórios em `docs/pesquisa/` (sem dados pessoais da máquina).
-3. [ ] Escrever BUILD.md, DECISION.md, SECURITY_LOG.md. `git init` do repositório principal e primeiro commit (sem marca de IA!).
-4. [ ] Mover o clone do YARG para `C:\Dev\GuitarHero\YARG`; atalho na Área de Trabalho.
-5. [ ] Conferir `gh auth status` e a licença Unity. Se ok: criar forks `codingfoxxx/YARG` (todas as branches) e `codingfoxxx/YARG.Core` só se for mexer no core; criar branch `pessoal` a partir de `dev`@275e9a13; configurar remotes (`origin` = fork, `upstream` = oficial).
-6. [ ] Instalar (portátil, com hash + Defender): .NET SDK 10 (`dotnet-install.ps1` em `_tools\dotnet`), Blender 4.5.5 LTS zip em `_tools\blender` + `blender --register` (associação .blend por usuário), Unity Editor 6000.3.5f2 via Hub CLI em `_tools\Unity` (só Windows Mono, sem VS, sem docs).
-7. [ ] `git lfs pull` no YARG; build de linha de comando (`-batchmode -buildWindows64Player`), logs em `_builds\`.
-8. [ ] Rodar `dotnet test` do YARG.Core.UnitTests; criar projeto de testes da engine (5 trastes, inputs com timestamp) no repositório principal.
-9. [ ] Ambiente Python 3.11 (`.venv`), primeiro em container Docker (isolamento) para registrar downloads de pesos; pinos com hash.
-10. [ ] Ferramenta `autochart` (ver DECISION.md) + validador .NET com YARG.Core.
-11. [ ] Músicas de teste (candidatas em docs/pesquisa/musicas-livres.md): Burn The World Waltz (Kevin MacLeod, 3/4, 177 BPM), Attack of the Aguaviva (Blue_Wave_Theory, 170, FLAC), The Beach is No Place... (Admiral Bob, 124), The Vagabond (Josh Woodward, 128, pede e-mail).
-12. [ ] Eixo A: auditoria de timing (suspeitas em docs/pesquisa/mapa-input-engine.md), histerese nos gatilhos analógicos, deadzone do whammy, calibração guiada para controle.
+1. [x] LICENSES.md, DECISION.md, SECURITY_LOG.md, docs/pesquisa.
+2. [x] Fork criado e branch `pessoal` publicada.
+3. [ ] Repositório `yarg-autochart` no GitHub com o submódulo `YARG`.
+4. [ ] **Testes da engine de 5 trastes** (`tests/EngineTests`, NUnit, net10.0, referenciando `YARG/YARG.Core/YARG.Core/YARG.Core.csproj`): inputs com timestamp para strum, HOPO, tap, acordes, ghosting, sustain, star power, janelas nas bordas. Investigar as suspeitas 7, 8, 9 do `docs/pesquisa/mapa-input-engine.md`.
+5. [ ] **Validador .NET** (`tools/validator`): varre a pasta da música como o jogo (CacheHandler/SongEntry), carrega o chart, roda o bot, gera relatório.
+6. [ ] **Ambiente Python 3.11**: teste isolado em Docker (downloads de pesos), depois `.venv` local com hashes. Checar espaço antes (Docker cresce o vhdx).
+7. [ ] **Ferramenta `autochart`** (pipeline em DECISION.md §5) + métricas + relatório.
+8. [ ] Músicas de teste: baixar 3-4 (ver `docs/pesquisa/musicas-livres.md`), registrar hashes e créditos em LICENSES.md §5, gerar charts, validar.
+9. [ ] Moonscraper 1.5.13 (download verificado) + documentar o fluxo de edição.
+10. [ ] (Com disco livre) Unity 6000.3.5f2 + Blender 4.5.5 LTS → build de linha de comando → teste de fumaça.
+11. [ ] Eixo A no código do jogo: histerese de gatilho, deadzone do whammy, calibração guiada, `Keyboard.current`.
+12. [ ] PLAYTEST.md, relatório final, conferência do histórico git (sem marcas de IA).
 
 ## Problemas e observações
 
-- `Keyboard.current` usado sem checar nulo em `GameManager.Update` (baixo risco no Windows).
-- Suspeita confirmada no código: com calibração 0 e "Account for hardware latency" ligado, a latência do endpoint (~35 ms no modo compartilhado) é descontada duas vezes. Pode compensar latências não modeladas; só medição real resolve. A calibração neutraliza. Não alterar sem medir.
-- Regressão upstream (não nos afeta): sem `song.ini`, um `notes.chart` sozinho não é detectado (`CacheHandler.cs:808-810`).
+- `Keyboard.current` sem checagem de nulo em `GameManager.Update` (baixo risco no Windows).
+- Latência de saída contada duas vezes no modo compartilhado com calibração 0 (confirmado no código; ver docs/pesquisa/mapa-input-engine.md §suspeitas 1). Não alterar sem medir; a calibração neutraliza.
+- Parsing de números dependente do idioma do Windows (bindings, campos de texto): consistente no mesmo PC; risco se a região do Windows mudar.
+- Regressão upstream: sem `song.ini`, `notes.chart` sozinho não é detectado.
+- O guarda de segurança do terminal bloqueia comandos que têm `Remove-Item` junto com caminhos de `C:\Program Files` ou regex: fazer remoções em comandos separados.

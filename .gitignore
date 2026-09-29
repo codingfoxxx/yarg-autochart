@@ -3,10 +3,6 @@
 # O fork do YARG é um repositório separado (ver DECISION.md).
 # ---------------------------------------------------------------
 
-# Fork do YARG: clonado em ./YARG, versionado no próprio repositório
-# (vira submódulo quando o fork existir no GitHub).
-/YARG/
-
 # Áudio NUNCA entra no git: evita commitar música sem licença verificada.
 # Músicas de teste com licença livre vão para o GitHub Releases.
 *.mp3

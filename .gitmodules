@@ -1,0 +1,4 @@
+[submodule "YARG"]
+	path = YARG
+	url = https://github.com/codingfoxxx/YARG.git
+	branch = pessoal
