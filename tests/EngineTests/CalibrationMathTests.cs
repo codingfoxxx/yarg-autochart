@@ -119,6 +119,38 @@ public class CalibrationMathTests
         Assert.That(r.Consistency, Is.EqualTo(CalibrationMath.Consistency.Poor), $"dispersão {r.Spread * 1000:0} ms");
     }
 
+    [Test]
+    public void DelayNearHalfABeat_IsRejectedAsUnreliable()
+    {
+        // 375 ms = meia batida a 80 BPM: com ruído, metade dos toques "dobra" para a batida seguinte
+        Assert.That(CalibrationMath.TryCalculate(Taps(0.375, beats: 40, sigma: 0.012, seed: 5), Spb, out var r), Is.True);
+        TestContext.Out.WriteLine($"usados {r.Used}, descartados {r.Discarded}");
+        Assert.That(r.IsReliable, Is.False);
+    }
+
+    [Test]
+    public void OrdinaryTapping_IsReliable()
+    {
+        // 200 jogadores com erro de 20 ms e atrasos de 0 a 250 ms: nenhum resultado recusado
+        for (int seed = 1; seed <= 200; seed++)
+        {
+            double delay = (seed % 26) * 0.010;
+            Assert.That(CalibrationMath.TryCalculate(Taps(delay, beats: 40, sigma: 0.020, seed: seed), Spb, out var r), Is.True);
+            Assert.That(r.IsReliable, Is.True, $"atraso {delay * 1000:0} ms, usados {r.Used}, descartados {r.Discarded}");
+        }
+    }
+
+    [Test]
+    public void StrayPresses_UpToAQuarter_AreStillReliable()
+    {
+        var taps = Taps(0.040, beats: 40, sigma: 0.010, seed: 7);
+        for (int i = 0; i < 10; i++) taps.Add((3 + 3 * i) * Spb + 0.25); // 10 toques soltos em 50
+        taps.Sort();
+        Assert.That(CalibrationMath.TryCalculate(taps, Spb, out var r), Is.True);
+        Assert.That(r.IsReliable, Is.True, $"usados {r.Used}, descartados {r.Discarded}");
+        Assert.That(r.Delay, Is.EqualTo(0.040).Within(0.005));
+    }
+
     [TestCase(25, 10, 15)]
     [TestCase(-5, 20, -25)]
     [TestCase(40, 40, 0)]
