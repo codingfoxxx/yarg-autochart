@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autochart"
+version = "0.1.0"
+description = "Gera charts de guitarra de 5 trastes (YARG / Clone Hero) a partir de qualquer arquivo de áudio."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { text = "MIT" }
+authors = [{ name = "Lucas Raposo" }]
+# As versões exatas (com hashes) ficam em requirements-win.lock; aqui só os mínimos.
+dependencies = [
+    "numpy>=2",
+    "scipy",
+    "soundfile",
+    "librosa==0.11.0",
+    "torch>=2.1",
+    "torchaudio",
+    "beat-this==1.1.0",
+    "demucs==4.1.0",
+    "onnxruntime",
+]
+
+[project.optional-dependencies]
+# basic-pitch é instalado com --no-deps (ver README): suas dependências declaradas puxam o
+# TensorFlow no Windows, mas usamos só o backend ONNX.
+pitch = ["resampy", "mir_eval", "pretty_midi", "scikit-learn", "typing_extensions"]
+dev = ["pytest"]
+
+[project.scripts]
+autochart = "autochart.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

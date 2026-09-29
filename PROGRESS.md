@@ -32,6 +32,15 @@
 | 2026-09-29 | Dois repositórios: fork `codingfoxxx/YARG` + `codingfoxxx/yarg-autochart` (MIT) | Fork limpo e fácil de atualizar; ver DECISION.md §2 |
 | 2026-09-29 | Executável do jogo **só local** até o Lucas decidir sobre rebranding | Nome/logos "YARG" sem licença de uso; ver LICENSES.md §1 |
 
+## Madrugada de 29/09 (01:00-02:00) — o que foi feito
+
+- **Testes da engine** (`tests/EngineTests`, 25 testes, todos passando) + `docs/auditoria-timing.md`: resultado idêntico de 24 a 1000 fps; janela efetiva de palhetada −95/+70 ms; 2 problemas do upstream demonstrados (KnownIssue). Commit `24a034f`.
+- **Pilha de ML**: sandbox Docker (`sandbox/ml-sandbox.sh`, `sandbox/smoke.py`, `sandbox/wheels-win.sh`) → wheels do Windows com hash em `_work/sandbox/wheels-win` + `_work/sandbox/requirements-win.lock` → `.venv` (Python 3.11.9) instalado com `--no-index --require-hashes`. `autochart/src` entra no venv por `.venv/Lib/site-packages/autochart-src.pth`.
+- **Smart App Control (Windows) bloqueia as DLLs do torch 2.14** (sem assinatura/reputação). Solução sem mexer na segurança: **torch/torchaudio fixados em 2.8.0** (carregam). Não desligar o SAC (não volta sem reinstalar o Windows).
+- **Pesos**: `models/beat_this/final0.ckpt` (sha256 8c328b45…), `models/demucs/htdemucs_6s-5c90dfd2.safetensors` (sha256 d2a1745f…). Carregados offline com hash conferido (`autochart/src/autochart/models.py`); o Demucs só carrega se a classe nos metadados for `demucs.htdemucs.HTDemucs`.
+- **autochart** (pacote Python em `autochart/src/autochart`): tempomap, quantize, analysis (batidas sub-quadro + correção de fase, ataques refinados no envelope), events, lanes (Viterbi), difficulty, starpower, sections, chart (escritor .chart/.ini com HOPO natural do YARG), report, pipeline, cli. Rodar: `.venv\Scripts\python.exe -m autochart gerar <audio> --titulo … --artista …`.
+- Teste sintético (20 s, 120 BPM): grid 120,03 BPM, erro das batidas mediana 2,4 ms; nota→evento ~2 ms; 0 violações.
+
 ## Próximos passos (em ordem)
 
 1. [x] LICENSES.md, DECISION.md, SECURITY_LOG.md, docs/pesquisa.
