@@ -34,7 +34,7 @@ if ($Saida) { $cliArgs += @('--saida', $Saida) }
 $code = $LASTEXITCODE
 Write-Host ""
 if ($code -eq 0) {
-    Write-Host "Pronto! No YARG: Configurações > Song Manager > Refresh All Caches (músicas novas só aparecem depois disso)." -ForegroundColor Green
+    Write-Host "Pronto! No YARG, na biblioteca: LB (Laranja) > Escanear Músicas. Ou ligue 'Escanear Tudo ao Iniciar' em Configurações > Músicas." -ForegroundColor Green
 } else {
     Write-Host "A geração terminou com avisos ou erros (código $code). Veja o relatorio.md na pasta da música." -ForegroundColor Yellow
 }

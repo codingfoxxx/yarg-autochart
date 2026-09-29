@@ -8,6 +8,6 @@ Três músicas com licença Creative Commons (BY 3.0 / BY 4.0), com charts gerad
 | [Blue_Wave_Theory — Attack of the Aguaviva](Blue_Wave_Theory%20-%20Attack%20of%20the%20Aguaviva/relatorio.md) | surf rock ao vivo, 165→175 BPM, 4/4 | 640 / 4,5 | OK — tipos de nota conferem; perfeito 100% |
 | [Kevin MacLeod — Burn The World Waltz](Kevin%20MacLeod%20feat.%20Alexander%20Nakarada%20-%20Burn%20The%20World%20Waltz/relatorio.md) | metal em 3/4, ~175 BPM | 760 / 4,0 | OK — tipos de nota conferem; perfeito 100% |
 
-Para jogar: baixe o zip do Release, extraia as pastas dentro de uma pasta de músicas do YARG e use *Song Manager → Refresh All Caches*.
+Para jogar: baixe o zip do Release, extraia as pastas dentro de uma pasta de músicas do YARG e escaneie as músicas (*Configurações → Músicas → Atualizar todos os caches*, ou na biblioteca **Laranja/LB → Escanear Músicas**).
 
 Licenças, fontes e hashes: [LICENSES.md §5](../LICENSES.md).

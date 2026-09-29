@@ -15,6 +15,7 @@ Roteiro para o Lucas testar o jogo e o autochart, com o que observar e como rela
 
 1. Abra o jogo. **Esperado:** menu principal em até ~30 s (a primeira varredura de músicas pode demorar).
 2. **Configurações → Músicas** (*Settings → Songs*): adicione a pasta `C:\Dev\GuitarHero\songs` e use **Atualizar todos os caches** (*Refresh All Caches*). **Esperado:** as 3 músicas aparecem em **Jogar**.
+   - Na mesma aba, ligue **Escanear Tudo ao Iniciar** (opção do fork): músicas novas passam a aparecer sozinhas quando o jogo abre. Sem ela, dentro da biblioteca, aperte **LB** (Laranja) e escolha **Escanear Músicas**.
 3. **Perfis → Adicionar Perfil** (*Profiles → Add Profile*): crie um perfil de **Guitarra (5 botões)**. Ative o perfil, adicione um dispositivo e escolha o controle de Xbox. Na pergunta *"Which kind of controller is this?"*, escolha **Gamepad**. O mapeamento padrão é aplicado sozinho.
    - O jogo **não** cria perfil automático para controle comum, só para guitarras e baterias de verdade. Esse passo é sempre manual.
 
@@ -79,7 +80,7 @@ Durante cada música, observe:
 1. Uma vez só: `scripts\preparar-ambiente.ps1`.
 2. **Arraste um mp3 seu em cima de `scripts\gerar-musica.bat`** e informe nome e artista.
 3. **Esperado:** em ~1 min, a pasta aparece em `C:\Dev\GuitarHero\songs\Artista - Música\`, com `relatorio.md`. No fim do relatório, "Validação no YARG.Core" deve dizer **OK**. Se o Windows barrar o validador, ele roda no Docker (Docker Desktop precisa estar aberto) ou aparece "não executada" com o motivo.
-4. [depois do build] No jogo, **Atualizar todos os caches** e jogue a música.
+4. [depois do build] No jogo, a música aparece sozinha se **Escanear Tudo ao Iniciar** estiver ligado. Senão, na biblioteca, **LB → Escanear Músicas**. Jogue.
 
 Anote: tempo que levou, o que o relatório diz, e se o chart ficou jogável.
 

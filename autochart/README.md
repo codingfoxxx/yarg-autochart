@@ -8,7 +8,7 @@ Gera uma **pasta de música pronta para o YARG** (`song.ini`, `notes.chart`, `so
 
 1. Uma vez só: `scripts\preparar-ambiente.ps1` (cria o `.venv` com os pacotes verificados e baixa os modelos conferindo o hash).
 2. **Arraste o arquivo de áudio em cima de `scripts\gerar-musica.bat`**, informe nome e artista.
-3. A música aparece em `C:\Dev\GuitarHero\songs\Artista - Música\`. No YARG, adicione essa pasta `songs` uma vez em *Configurações → Songs* e, depois de cada música nova, use **Song Manager → Refresh All Caches** (o YARG só enxerga músicas novas depois disso).
+3. A música aparece em `C:\Dev\GuitarHero\songs\Artista - Música\`. No YARG, adicione essa pasta `songs` uma vez em *Configurações → Músicas*. O jogo só enxerga músicas novas depois de uma varredura completa: no fork, ligue **Escanear Tudo ao Iniciar** na mesma aba (ela acontece a cada abertura), ou, na biblioteca, aperte **Laranja (LB no controle) → Escanear Músicas**.
 
 ## Linha de comando
 
@@ -63,7 +63,7 @@ Detalhes e justificativas: [DECISION.md](../DECISION.md) e [docs/pesquisa/](../d
 1. Instale o **Moonscraper Chart Editor 1.5.13** (instalador oficial conferido em `_downloads\MSCE.1.5.13.Installer.Win64.exe`; SHA-256 `30c5d007…fefe`, ver SECURITY_LOG.md).
 2. *File → Open* no `notes.chart` da música. O áudio carrega sozinho (`MusicStream`/`GuitarStream` no `[Song]`).
 3. Edite e salve (*File → Save*, formato `.chart`). O HOPO que o Moonscraper mostra é o mesmo que o YARG vai mostrar (mesma regra e mesmo limiar de 65 ticks).
-4. No YARG, **Refresh All Caches**. Rode `scripts\validar-musica.ps1 "pasta da música"` para conferir o chart editado no YARG.Core.
+4. No YARG, escaneie as músicas de novo (**Laranja/LB → Escanear Músicas** na biblioteca). Rode `scripts\validar-musica.ps1 "pasta da música"` para conferir o chart editado no YARG.Core.
 
 Não gere de novo por cima de uma pasta editada (o gerador sobrescreve o `notes.chart`).
 
