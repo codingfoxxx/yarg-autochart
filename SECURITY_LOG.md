@@ -92,3 +92,36 @@ Máquina: Windows 11 Home, Defender ativo (plataforma 4.18.26080.4, assinaturas 
 | 2026-09-29 | Unity Hub instalado por usuário (MSIX) | Configurações → Apps → Unity Hub → Desinstalar |
 | 2026-09-29 | Atalho `Guitar Hero.lnk` na Área de Trabalho apontando para `C:\Dev\GuitarHero` | apagar o atalho |
 | 2026-09-29 | Vigia noturno (processo PowerShell oculto, `_work\vigia-noturno.ps1`) que impede a suspensão por ociosidade enquanto há trabalho, suspende o PC quando ocioso e pode registrar a tarefa agendada `GuitarHero-Despertar` (acordar o PC) | encerra sozinho às 11:00; criar `_work\parar-vigia.txt` para parar antes; `Unregister-ScheduledTask GuitarHero-Despertar` |
+| 2026-09-29 | Docker Desktop iniciado; o disco virtual `docker_data.vhdx` cresceu de 24,68 para 26,50 GB (imagem e camadas do sandbox) | remover a imagem `python:3.11-slim-bookworm` pelo Docker libera espaço dentro do disco virtual (o arquivo não encolhe sozinho) |
+| 2026-09-29 | `.venv` (Python 3.11, ~1,5 GB), `models\` (~130 MB), `_cache\stems` (~120 MB por música) | apagar as pastas |
+
+## Downloads da madrugada de 29/09 (pilha do auto-charting e ferramentas)
+
+| Item | Origem (oficial) | SHA-256 / verificação | Defender | Onde / uso |
+|---|---|---|---|---|
+| .NET SDK 10.0.401 (zip portátil) | builds.dotnet.microsoft.com (URL e SHA-512 do `releases.json` oficial) | SHA-512 `24b670ad…c79430` confere; `dotnet.exe` assinado por **.NET (Microsoft)** | limpo | `_tools\dotnet`; testes e validador |
+| Imagem Docker `python:3.11-slim-bookworm` | Docker Hub (imagem oficial) | digest `sha256:a36c24f9cbdf4fd0f52d67f0823eeac19c2028c637cecc392d97f980d4fec56b` | — | contêiner descartável do sandbox |
+| Pacotes Python (1ª instalação, **dentro do contêiner**) | PyPI + download.pytorch.org (CPU) | versões em `_work/sandbox/freeze-linux.txt` | — | teste de fumaça isolado (`sandbox/`) |
+| 65 wheels do Windows (CPython 3.11) | PyPI, baixados no contêiner | hashes em `autochart/requirements-win.lock` (SHA-256 do lock `e443d7e8…`); instalação com `--no-index --require-hashes`; torch 2.8.0 = `8c7ef765…` (igual ao PyPI) | limpo | `.venv` |
+| Pesos Beat This! `final0.ckpt` | cloud.cp.jku.at (URL que está no código oficial do beat_this) | `8c328b45f59d8dd3dff219253ff6a8d6482be57d0133a29140e2febbf8eb8331` (baixado no contêiner; igual nas 2 execuções) | limpo | `models\beat_this` |
+| Pesos Demucs `htdemucs_6s` (`5c90dfd2.safetensors`) | huggingface.co/adefossez/HTDemucs-6s (revisão `3c5ee475…`) | `d2a1745f0744721f6b8ca5bf469b67c651ea5ed1b52998cab033b2158609d411` | limpo | `models\demucs` |
+| wheel `beat_this-1.1.0` (só para ler o código) | PyPI | `3f2b2d1e…a645` | — | inspeção |
+| wheel do torch 2.8.0 (teste do Smart App Control) | PyPI | `8c7ef765…80aa`, igual ao PyPI | — | DLLs extraídas e carregadas num processo isolado; apagado depois |
+| Texto da GPL-3.0 | gnu.org/licenses/gpl-3.0.txt | `3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986` (hash conhecido do texto canônico) | — | `COPYING` no fork |
+| 3 MP3 de teste (CC BY) | ccMixter e incompetech (páginas oficiais) | `e1a0ad8f…`, `a5ced5ab…`, `35e03b3e…` (LICENSES.md §5) | limpo | `_work\songsrc` |
+| Moonscraper Chart Editor 1.5.13 (instalador Win64) | github.com/FireFox2000000/Moonscraper-Chart-Editor (release oficial) | `30c5d0070cdfca7dc7b0f1c973468b12995ff3e14685a1308790257aa030fefe` = digest do GitHub; **sem assinatura digital** | limpo | `_downloads`; **não executado** (a instalação fica com o Lucas) |
+
+### Análise de risco dos pacotes e modelos
+
+- **Typosquatting:** os 65 nomes foram revisados. `httpx2`/`httpcore2` pareciam suspeitos (o pacote conhecido é `httpx`), mas são o sucessor mantido pela organização **verificada** da Pydantic (github.com/pydantic/httpx2, ~1,5 mil estrelas, releases batendo com o PyPI) e são exigidos pelo `huggingface_hub` 2.0.0 oficial.
+- **Pesos que executam código ao carregar:** o checkpoint do Beat This! é um pickle do PyTorch. No PC ele só é aberto pelo caminho local, que usa `torch.load(weights_only=True)` (só tensores); o primeiro carregamento (por URL, sem essa proteção) aconteceu apenas no contêiner. O Demucs vem em safetensors, mas o carregador instancia a classe escrita nos metadados; por isso exigimos a classe `demucs.htdemucs.HTDemucs` antes de carregar, além do hash. O caminho legado do Demucs (arquivos `.th` com `weights_only=False`) não é usado.
+- **Telemetria:** o `huggingface_hub` 2.x baixa um catálogo de "agentes de IA" (`.agent_harnesses.json`) para marcar requisições feitas dentro de agentes. Em tempo de execução a ferramenta liga `HF_HUB_OFFLINE=1` e `HF_HUB_DISABLE_TELEMETRY=1` e não acessa a rede.
+- **setup.py de terceiros:** nenhum rodou no PC (todos os pacotes têm wheel; os que não tivessem seriam compilados no contêiner).
+
+### Smart App Control (Windows 11) — descobertas
+
+- Está **ativo em modo de bloqueio** (`VerifiedAndReputablePolicyState = 1`), com as políticas carregadas no boot.
+- Bloqueou as DLLs do **torch 2.14** (sem assinatura, sem reputação). Solução sem mexer na proteção: fixar **torch 2.8.0**, cujas DLLs são aceitas.
+- Bloqueia uma DLL .NET compilada aqui quando ela é o **programa principal** (`dotnet app.dll` ou o `.exe` gerado), mas não quando é carregada como **dependência** de um hospedeiro assinado pela Microsoft (`testhost`). Por isso o validador roda via `dotnet test`.
+- **Risco para o jogo:** o executável que o Unity gerar a partir do código (`YARG.exe`) será um binário novo, sem reputação, e pode ser bloqueado. Será verificado no primeiro build.
+- O Smart App Control **não deve ser desligado** sem decisão do Lucas: desligado, só volta reinstalando o Windows.

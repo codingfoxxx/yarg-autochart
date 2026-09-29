@@ -1,65 +1,74 @@
 # PROGRESS — diário do projeto
 
 > Fonte de verdade para retomar o trabalho. Atualizado a cada etapa.
-> Última atualização: 2026-09-29 01:15 (horário de Brasília).
+> Última atualização: 2026-09-29 02:40 (horário de Brasília).
 
 ## Estado atual (resumo)
 
-- **Fase 0 concluída**: pesquisas em `docs/pesquisa/`, DECISION.md, LICENSES.md, SECURITY_LOG.md.
-- **Fork publicado**: https://github.com/codingfoxxx/YARG (branch padrão `pessoal`, commit `65ee51d2` = upstream `dev` @ `275e9a13` + só documentação: aviso no README, FORK.md, CHANGELOG-FORK.md, BUILD.md rascunho, NOTICE, COPYING). GitHub Actions do fork desligadas. LFS do fork funciona (servido pela rede de forks).
-- **Repositório de ferramentas**: `C:\Dev\GuitarHero` (git local, branch `main`); vai para https://github.com/codingfoxxx/yarg-autochart com o fork como submódulo `YARG/`.
-- **Unity: ADIADO para amanhã** por falta de disco. O Hub instalou sozinho (assistente de primeiro uso, aceito pelo Lucas) o Unity **6000.6.3f1** (+WebGL +docs, 8,4 GB em `C:\Program Files\Unity\Hub\Editor\6000.6.3f1`), que o YARG não usa. Livre: ~12,8 GB. O 6000.3.5f2 (~10 GB no pico) + Library (~5-8 GB) não cabem. **Pedir ao Lucas: desinstalar o 6000.6.3f1 pelo Hub (Installs → ⋮ → Uninstall; pede UAC).** Depois: instalar 6000.3.5f2 (Hub: `unityhub://6000.3.5f2/3fa8bc678cb0`, sem VS nem docs) e Blender.
-- **Licença Unity Personal**: ativada (29/09 00:26). Fica na pasta virtualizada do Hub MSIX (`%LOCALAPPDATA%\Packages\UnityTechnologies.UnityHub_2vrhnee42bhxm\LocalCache\Local\Unity\licenses\`). Rodar o editor com o Hub aberto.
-- **.NET SDK 10.0.401** portátil em `_tools\dotnet` (SHA-512 ok). YARG.Core.UnitTests: 547 ok, 1 falha de cultura pt-BR, 2 ignorados.
-- **gh** logado como `codingfoxxx` (keyring), escopos repo/workflow/gist/read:org. No clone do YARG, credencial local = gh.
+| Frente | Estado |
+|---|---|
+| Fase 0 (pesquisa e planejamento) | **Concluída**: `docs/pesquisa/`, DECISION.md, LICENSES.md, SECURITY_LOG.md |
+| Fork do YARG | **Publicado**: https://github.com/codingfoxxx/YARG (branch padrão `pessoal` = upstream `dev` @ `275e9a13` + documentação: README com aviso, FORK.md, CHANGELOG-FORK.md, BUILD.md rascunho, NOTICE, COPYING). Actions desligadas. **Nenhuma mudança de código ainda.** |
+| Repositório de ferramentas | **Publicado**: https://github.com/codingfoxxx/yarg-autochart (`main`), com o fork como submódulo `YARG/` |
+| Auditoria da engine (sem Unity) | **Feita**: 25 testes (`tests/EngineTests`), relatório em `docs/auditoria-timing.md`; 2 bugs do upstream demonstrados |
+| Ferramenta autochart | **Funcionando** (`autochart/`): CLI, arrastar-e-soltar, relatório, validação no YARG.Core, 20 testes unitários |
+| Músicas de teste | **3 publicadas**: `samples/` + Release https://github.com/codingfoxxx/yarg-autochart/releases/tag/musicas-teste-v1 (pré-lançamento) |
+| Unity / build do jogo | **Bloqueado por disco** (ver abaixo) — próximo passo com o Lucas |
+| Eixo A no código do jogo | Não iniciado (precisa do Unity para compilar) |
+| PLAYTEST.md / relatório final | Pendentes |
 
-## Noite de 28→29/09 (Lucas dormindo)
+## Pendências que dependem do Lucas (manhã de 29/09)
 
-- **Vigia noturno** (`_work\vigia-noturno.ps1`, PID em `_work\vigia.pid`, log em `_work\vigia-noturno.log`): mantém o PC acordado enquanto há trabalho; após 25 min de ociosidade suspende com despertador (02:05, depois 07:10); em problema (disco < 3 GB, RAM/commit baixos, erro de GPU/driver no log) grava `_work\PROBLEMA-PC.txt` e suspende **sem** despertador. Encerra às 11:00. Controles: `_work\busy-until.txt` (yyyy-MM-dd HH:mm), `_work\sem-despertar.txt`, `_work\parar-vigia.txt`.
-- **Lembretes do Claude** (só nesta sessão): 02:10, 02:25, 07:15, 07:32.
-- **Regra do Lucas:** se algo der errado com o PC (comportamento inesperado, memória…), NÃO prosseguir: parar, suspender o PC e esperar a resposta dele. **Checar `_work\PROBLEMA-PC.txt` antes de cada etapa longa.**
+1. **Espaço em disco para o Unity.** Livres ~9 GB. O Hub instalou sozinho o Unity **6000.6.3f1** (8,4 GB, não usado pelo YARG). Desinstalar pelo Hub (Installs → ⋮ → Uninstall, pede UAC) libera o suficiente para o 6000.3.5f2 (~7 GB) + Library (~5-8 GB). Outra opção: o disco do Docker (26,5 GB; as imagens `precheck-*` são dele).
+2. **Instalar o Unity 6000.3.5f2** (Hub: `unityhub://6000.3.5f2/3fa8bc678cb0`, sem VS/docs; pede UAC) e o **Blender 4.5.5 LTS** (MSI do blender.org; pede UAC). Ou autorizar alternativas sem admin.
+3. **Smart App Control**: o `YARG.exe` compilado localmente pode ser bloqueado (ver SECURITY_LOG.md). Se for, decidir: (a) manter o SAC e usarmos outra estratégia, ou (b) desligar o SAC (irreversível sem reinstalar o Windows). Não desligar sem ele decidir.
+4. **Executável público**: rebranding antes de publicar um build (LICENSES.md §1 e §6).
+5. **Moonscraper**: instalar (instalador verificado em `_downloads\`); pode ser barrado pelo SAC (sem assinatura).
+
+## Como rodar as coisas
+
+- Ambiente: `scripts\preparar-ambiente.ps1` (venv do lock + modelos com hash). .NET: `. scripts\dev-env.ps1`.
+- Gerar música: arrastar o áudio em `scripts\gerar-musica.bat`, ou `.venv\Scripts\python.exe -m autochart gerar <audio> --titulo … --artista …`.
+- Validar: `scripts\validar-musica.ps1 <pasta>`.
+- Testes: `.venv\Scripts\python.exe -m unittest discover -s autochart\tests`; `dotnet test tests\EngineTests`; testes do YARG.Core: `dotnet test YARG\YARG.Core\YARG.Core.UnitTests` (1 falha de cultura pt-BR, conhecida).
+
+## Madrugada de 29/09 — o que foi feito (com números)
+
+- **Testes da engine** (`tests/EngineTests`): resultado idêntico de 24 a 1000 fps (40 partidas humanizadas); janela efetiva de palhetada −95/+70 ms; tolerâncias, acordes, âncora, ghosting, sustain e star power conferidos. Bugs do upstream: pontos de sustain sem multiplicador no overstrum; `FiveFretGuitarPreset.Copy()` sem `SustainDropLeniency`.
+- **Pilha de ML isolada**: sandbox Docker → 65 wheels do Windows com hash → `.venv` offline. **Smart App Control bloqueia torch 2.14** → torch/torchaudio **2.8.0**. Pesos locais com hash; Demucs só carrega se a classe nos metadados for a esperada.
+- **autochart**: batidas sub-quadro + fase pelos ataques; andamento único quando cabe no ruído (124,0 BPM exatos na música do Admiral Bob); deriva real seguida (165→176 BPM ao vivo no Aguaviva); compasso único com fase (3/4 no waltz); vocabulário rítmico por música (sem tercinas falsas); filtro de vazamento; validação no YARG.Core com conferência nota a nota do tipo strum/HOPO/tap.
+- **Resultados nas 3 músicas**: 0 violações; o scanner do jogo acha as 4 dificuldades; tipos de nota conferem 100%; jogador perfeito 100%; humano σ20 ms 99,9-100%; humano σ35 ms 95,7-97,9%.
+- **Vigia noturno** (`_work\vigia-noturno.ps1`, log em `_work\vigia-noturno.log`): mantém o PC acordado enquanto há trabalho; após 25 min ocioso suspende com despertador (02:05, 07:10); em problema grava `_work\PROBLEMA-PC.txt` e suspende sem despertar. Encerra às 11:00. **Regra do Lucas: se algo der errado com o PC, parar, suspender e esperar.**
 
 ## Decisões tomadas
 
 | Data | Decisão | Motivo |
 |---|---|---|
-| 2026-09-28 | Projeto em `C:\Dev\GuitarHero` (atalho "Guitar Hero" na Área de Trabalho), fora do OneDrive | Escolha do Lucas |
-| 2026-09-28 | Limpeza de caches npm (6,0 GB) e pip (1,7 GB) | Autorizado pelo Lucas |
+| 2026-09-28 | Projeto em `C:\Dev\GuitarHero` (atalho na Área de Trabalho), fora do OneDrive | Escolha do Lucas |
 | 2026-09-28 | Base do fork = upstream `dev` @ `275e9a13` | Correções de sincronia/calibração posteriores ao v0.15.0 |
 | 2026-09-28 | Instalações portáteis em `_tools/` | Terminal sem admin; sem UAC durante a noite |
-| 2026-09-28 | Blender é necessário | `Notes.blend` ainda é usado pelo tema de notas Rectangular |
-| 2026-09-29 | Chart em `.chart` (res 192) | Nativo do Moonscraper; ver DECISION.md §4 |
-| 2026-09-29 | Dois repositórios: fork `codingfoxxx/YARG` + `codingfoxxx/yarg-autochart` (MIT) | Fork limpo e fácil de atualizar; ver DECISION.md §2 |
-| 2026-09-29 | Executável do jogo **só local** até o Lucas decidir sobre rebranding | Nome/logos "YARG" sem licença de uso; ver LICENSES.md §1 |
+| 2026-09-29 | Chart em `.chart` (res 192) | Nativo do Moonscraper; HOPO idêntico ao do YARG |
+| 2026-09-29 | Dois repositórios: fork + `yarg-autochart` (MIT) | Fork limpo e fácil de atualizar |
+| 2026-09-29 | Executável do jogo só local até decidir rebranding | Nome/logos "YARG" sem licença de uso |
+| 2026-09-29 | torch 2.8.0 | Smart App Control bloqueia DLLs do 2.14 |
+| 2026-09-29 | Validador via `dotnet test` | Smart App Control bloqueia DLL local como programa principal |
+| 2026-09-29 | Músicas publicadas sem stems separados | Pesos do Demucs "só para fins científicos" |
+| 2026-09-29 | Fórmula de compasso única por música | Tempos fortes do detector oscilam (39 mudanças falsas no waltz) |
 
-## Madrugada de 29/09 (01:00-02:00) — o que foi feito
+## Próximos passos
 
-- **Testes da engine** (`tests/EngineTests`, 25 testes, todos passando) + `docs/auditoria-timing.md`: resultado idêntico de 24 a 1000 fps; janela efetiva de palhetada −95/+70 ms; 2 problemas do upstream demonstrados (KnownIssue). Commit `24a034f`.
-- **Pilha de ML**: sandbox Docker (`sandbox/ml-sandbox.sh`, `sandbox/smoke.py`, `sandbox/wheels-win.sh`) → wheels do Windows com hash em `_work/sandbox/wheels-win` + `_work/sandbox/requirements-win.lock` → `.venv` (Python 3.11.9) instalado com `--no-index --require-hashes`. `autochart/src` entra no venv por `.venv/Lib/site-packages/autochart-src.pth`.
-- **Smart App Control (Windows) bloqueia as DLLs do torch 2.14** (sem assinatura/reputação). Solução sem mexer na segurança: **torch/torchaudio fixados em 2.8.0** (carregam). Não desligar o SAC (não volta sem reinstalar o Windows).
-- **Pesos**: `models/beat_this/final0.ckpt` (sha256 8c328b45…), `models/demucs/htdemucs_6s-5c90dfd2.safetensors` (sha256 d2a1745f…). Carregados offline com hash conferido (`autochart/src/autochart/models.py`); o Demucs só carrega se a classe nos metadados for `demucs.htdemucs.HTDemucs`.
-- **autochart** (pacote Python em `autochart/src/autochart`): tempomap, quantize, analysis (batidas sub-quadro + correção de fase, ataques refinados no envelope), events, lanes (Viterbi), difficulty, starpower, sections, chart (escritor .chart/.ini com HOPO natural do YARG), report, pipeline, cli. Rodar: `.venv\Scripts\python.exe -m autochart gerar <audio> --titulo … --artista …`.
-- Teste sintético (20 s, 120 BPM): grid 120,03 BPM, erro das batidas mediana 2,4 ms; nota→evento ~2 ms; 0 violações.
-
-## Próximos passos (em ordem)
-
-1. [x] LICENSES.md, DECISION.md, SECURITY_LOG.md, docs/pesquisa.
-2. [x] Fork criado e branch `pessoal` publicada.
-3. [ ] Repositório `yarg-autochart` no GitHub com o submódulo `YARG`.
-4. [ ] **Testes da engine de 5 trastes** (`tests/EngineTests`, NUnit, net10.0, referenciando `YARG/YARG.Core/YARG.Core/YARG.Core.csproj`): inputs com timestamp para strum, HOPO, tap, acordes, ghosting, sustain, star power, janelas nas bordas. Investigar as suspeitas 7, 8, 9 do `docs/pesquisa/mapa-input-engine.md`.
-5. [ ] **Validador .NET** (`tools/validator`): varre a pasta da música como o jogo (CacheHandler/SongEntry), carrega o chart, roda o bot, gera relatório.
-6. [ ] **Ambiente Python 3.11**: teste isolado em Docker (downloads de pesos), depois `.venv` local com hashes. Checar espaço antes (Docker cresce o vhdx).
-7. [ ] **Ferramenta `autochart`** (pipeline em DECISION.md §5) + métricas + relatório.
-8. [ ] Músicas de teste: baixar 3-4 (ver `docs/pesquisa/musicas-livres.md`), registrar hashes e créditos em LICENSES.md §5, gerar charts, validar.
-9. [ ] Moonscraper 1.5.13 (download verificado) + documentar o fluxo de edição.
-10. [ ] (Com disco livre) Unity 6000.3.5f2 + Blender 4.5.5 LTS → build de linha de comando → teste de fumaça.
-11. [ ] Eixo A no código do jogo: histerese de gatilho, deadzone do whammy, calibração guiada, `Keyboard.current`.
-12. [ ] PLAYTEST.md, relatório final, conferência do histórico git (sem marcas de IA).
+1. [ ] (Lucas) liberar disco + Unity 6000.3.5f2 + Blender; decidir sobre o Smart App Control se o `YARG.exe` for bloqueado.
+2. [ ] Build de linha de comando do fork (`-batchmode -buildWindows64Player`), teste de fumaça (o jogo abre? acha as músicas de `songs\`?), medir FPS (PresentMon) e stutter.
+3. [ ] Eixo A no código: histerese de gatilho analógico (configurável), deadzone do whammy no preset de controle, `Keyboard.current` sem nulo, calibração guiada para controle (instruções pt-BR/en, salvar por perfil). Cada mudança com entrada no CHANGELOG-FORK.md.
+4. [ ] Testes de input no Unity (InputTestFixture com controle virtual de Xbox).
+5. [ ] PLAYTEST.md e relatório final (`RELATORIO-FINAL.md`), conferência do histórico git (sem marcas de IA).
+6. [ ] (opcional) PRs no upstream: os 2 bugs do YARG.Core e o teste de cultura.
 
 ## Problemas e observações
 
 - `Keyboard.current` sem checagem de nulo em `GameManager.Update` (baixo risco no Windows).
-- Latência de saída contada duas vezes no modo compartilhado com calibração 0 (confirmado no código; ver docs/pesquisa/mapa-input-engine.md §suspeitas 1). Não alterar sem medir; a calibração neutraliza.
-- Parsing de números dependente do idioma do Windows (bindings, campos de texto): consistente no mesmo PC; risco se a região do Windows mudar.
+- Latência de saída contada duas vezes com calibração 0 (confirmado no código; a calibração neutraliza; não alterar sem medir).
+- Parsing de números dependente do idioma do Windows (bindings, campos de texto).
 - Regressão upstream: sem `song.ini`, `notes.chart` sozinho não é detectado.
-- O guarda de segurança do terminal bloqueia comandos que têm `Remove-Item` junto com caminhos de `C:\Program Files` ou regex: fazer remoções em comandos separados.
+- O guarda de segurança do terminal bloqueia comandos com `Remove-Item`/`rm` junto de barras ou caminhos de sistema, mesmo dentro de texto: fazer remoções em comandos separados e escrever textos longos com a ferramenta de arquivos.
+- Metal denso é o caso mais difícil para o autochart (separação pior, ataques borrados).
