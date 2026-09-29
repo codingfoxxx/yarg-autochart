@@ -26,6 +26,11 @@ from .validate import validate_with_yarg
 
 SOURCES = ("guitarra", "outros", "baixo", "mix")
 _STEM_OF = {"guitarra": "guitar", "outros": "other", "baixo": "bass"}
+MIN_BEATS = 8  # abaixo disso não dá para montar um mapa de tempo confiável
+
+
+class SemRitmoError(ValueError):
+    """O áudio não tem batidas suficientes para gerar um chart."""
 
 
 @dataclass
@@ -114,6 +119,10 @@ def generate(audio_path: Path, output_root: Path, meta: SongMeta, opts: Options,
     t0 = time.time()
     beats = analysis.track_beats(mix, device=opts.dispositivo)
     step("batidas (Beat This!)", t0)
+    if len(beats.beats) < MIN_BEATS:
+        raise SemRitmoError(
+            f"só {len(beats.beats)} batida(s) encontrada(s) no áudio; é preciso pelo menos {MIN_BEATS}. "
+            "O arquivo parece não ter um pulso rítmico claro (ruído, fala, ambiente) ou é curto demais.")
 
     # Silêncio inicial: dá tempo de leitura e garante que o mapa de tempo comece antes da 1ª batida.
     pad = max(0.0, round(opts.silencio_inicial_min - float(beats.beats[0]), 2))

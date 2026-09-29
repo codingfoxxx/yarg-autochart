@@ -44,7 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.comando == "gerar":
-        from .pipeline import Options, generate
+        from .pipeline import Options, SemRitmoError, generate
         if not args.audio.is_file():
             print(f"Arquivo não encontrado: {args.audio}", file=sys.stderr)
             return 2
@@ -59,7 +59,11 @@ def main(argv: list[str] | None = None) -> int:
         opts = Options(fonte=args.fonte, densidade=args.densidade, sensibilidade=args.sensibilidade,
                        stems=not args.sem_stems, dispositivo=args.dispositivo, dificuldades=diffs,
                        validar=not args.sem_validacao)
-        result = generate(args.audio, args.saida or _default_output(), meta, opts)
+        try:
+            result = generate(args.audio, args.saida or _default_output(), meta, opts)
+        except SemRitmoError as e:
+            print(f"Não foi possível gerar o chart: {e}", file=sys.stderr)
+            return 3
         return 1 if result.report.get("violacoes") else 0
     return 2
 

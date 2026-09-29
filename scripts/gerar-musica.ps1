@@ -35,6 +35,8 @@ $code = $LASTEXITCODE
 Write-Host ""
 if ($code -eq 0) {
     Write-Host "Pronto! No YARG, na biblioteca: LB (Laranja) > Escanear Músicas. Ou ligue 'Escanear Tudo ao Iniciar' em Configurações > Músicas." -ForegroundColor Green
+} elseif ($code -eq 3) {
+    Write-Host "Não foi possível gerar o chart (veja a mensagem acima)." -ForegroundColor Yellow
 } else {
     Write-Host "A geração terminou com avisos ou erros (código $code). Veja o relatorio.md na pasta da música." -ForegroundColor Yellow
 }
