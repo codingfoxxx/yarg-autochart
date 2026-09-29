@@ -16,11 +16,12 @@ $imagem = 'mcr.microsoft.com/dotnet/sdk:10.0@sha256:35d40304542c8689331f8cab17c6
 $filtroArg = if ($Filtro) { "--filter '$Filtro'" } else { "" }
 $script = @"
 set -e
-mkdir -p /work/tests /work/YARG/YARG.Core /work/YARG/Assets/Script/Input/Bindings
+mkdir -p /work/tests /work/YARG/YARG.Core /work/YARG/Assets/Script/Input/Bindings /work/YARG/Assets/Script/Menu/Calibrator
 cp -r /src/tests/EngineTests /work/tests/
 cp -r /src/YARG/YARG.Core/YARG.Core /work/YARG/YARG.Core/
 cp /src/YARG/YARG.Core/Directory.Build.props /work/YARG/YARG.Core/ 2>/dev/null || true
 cp /src/YARG/Assets/Script/Input/Bindings/AnalogButtonHysteresis.cs /work/YARG/Assets/Script/Input/Bindings/
+cp /src/YARG/Assets/Script/Menu/Calibrator/CalibrationMath.cs /work/YARG/Assets/Script/Menu/Calibrator/
 find /work -type d \( -name bin -o -name obj \) -prune -exec rm -r {} +
 cd /work
 dotnet test tests/EngineTests --nologo $filtroArg --logger 'console;verbosity=normal'

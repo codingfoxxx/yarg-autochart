@@ -28,6 +28,7 @@
   <ItemGroup>
     <!-- Código do jogo sem dependência do Unity, testado aqui direto do fork. -->
     <Compile Include="..\..\YARG\Assets\Script\Input\Bindings\AnalogButtonHysteresis.cs" Link="Fork\AnalogButtonHysteresis.cs" />
+    <Compile Include="..\..\YARG\Assets\Script\Menu\Calibrator\CalibrationMath.cs" Link="Fork\CalibrationMath.cs" />
   </ItemGroup>
 
 </Project>
