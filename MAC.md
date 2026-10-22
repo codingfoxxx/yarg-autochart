@@ -24,7 +24,13 @@ Os detalhes do build (e do que é específico do Windows) estão em `YARG/BUILD.
 
 ## 3. Músicas
 
-As músicas **não estão no GitHub**: são faixas comerciais e os repositórios são públicos. Copie a pasta `songs/` do PC por AirDrop, pendrive ou nuvem e, no jogo, aponte a pasta em *Settings > Songs* e escaneie.
+As músicas **não estão neste repositório** (público): são faixas comerciais. Elas estão num repositório **privado**, `codingfoxxx/guitarhero-musicas` (precisa estar logado no GitHub com a conta dele):
+
+```bash
+git clone https://github.com/codingfoxxx/guitarhero-musicas.git songs
+```
+
+No jogo, aponte a pasta em *Settings > Songs* e escaneie.
 
 Cada música é uma pasta com `song.ini`, `notes.chart` ou `notes.mid` e o áudio (`.ogg`/`.opus`/`.mp3`).
 
