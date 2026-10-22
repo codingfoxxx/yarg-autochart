@@ -61,3 +61,6 @@ desktop.ini
 *.pem
 *.key
 *.pfx
+
+# Modo carreira: dados e áudio baixados (comercial)
+/career/
