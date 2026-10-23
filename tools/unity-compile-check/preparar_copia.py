@@ -129,7 +129,8 @@ def restaurar_nuget(fork: Path, destino: Path | None = None) -> None:
     cache = RAIZ / "_tools" / "nuget-packages"
     env = dict(os.environ, DOTNET_ROOT=str(RAIZ / "_tools" / "dotnet"), NUGET_PACKAGES=str(cache),
                DOTNET_CLI_TELEMETRY_OPTOUT="1", DOTNET_NOLOGO="1")
-    subprocess.run([str(RAIZ / "_tools" / "dotnet" / "dotnet.exe"), "restore", str(trabalho / "restore.csproj"), "-v", "q"],
+    dotnet = RAIZ / "_tools" / "dotnet" / ("dotnet.exe" if os.name == "nt" else "dotnet")
+    subprocess.run([str(dotnet), "restore", str(trabalho / "restore.csproj"), "-v", "q"],
                    env=env, check=True)
     destino = destino or PROJETO / "Assets" / "Packages"
     for pid, ver in pacotes:
