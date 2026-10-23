@@ -1,7 +1,7 @@
 # PROGRESS — diário do projeto
 
 > Fonte de verdade para retomar o trabalho. Atualizado a cada etapa.
-> Última atualização: 2026-09-29 11:00 (horário de Brasília).
+> Última atualização: 2026-10-23 00:30 (horário de Brasília).
 
 ## Estado atual (resumo)
 
@@ -11,12 +11,21 @@
 | Fork do YARG | **Publicado**: https://github.com/codingfoxxx/YARG, branch `pessoal` (upstream `dev` @ `275e9a13` + mudanças do CHANGELOG-FORK.md) |
 | Repositório de ferramentas | **Publicado**: https://github.com/codingfoxxx/yarg-autochart (`main`), com o fork como submódulo `YARG/` |
 | **Build do jogo** | **Funciona** (29/09, 10:49): Unity 6000.3.5f2, `scripts\build-jogo.ps1`, ~14 min no primeiro build. `_builds\YARG\YARG.exe` abre e chega ao menu **com o Smart App Control ligado** (sem bloqueio) |
+| **Build no Mac** | **Funciona** (23/10): MacBook M4 Pro, macOS 26, Unity 6000.3.5f2, `scripts/build-jogo-mac.sh`, ~7 min. `_builds/YARG.app` (universal, 538 MB) abre em pt-BR e acha as 83 músicas de `~/YARG/songs` (repo privado `guitarhero-musicas`). Atalho `/Applications/Guitar Hero.app`. Ver MAC.md |
 | Eixo A no código do jogo | **Publicado e compilado no Unity de verdade**: histerese nos gatilhos do controle; calibração guiada (instruções pt-BR/en, 2 passadas, resultado explicado, salvar para todos ou no perfil); calibração de entrada escalada pela velocidade; opção "Escanear Tudo ao Iniciar"; teclado/mouse ausentes não quebram mais. Revisão independente feita, achados corrigidos |
 | Ferramenta autochart | **Funcionando** (`autochart/`): CLI, arrastar-e-soltar, relatório, validação no YARG.Core (cai para contêiner se o Windows barrar), 26 testes |
 | Músicas de teste | **3 publicadas**: `samples/` + Release `musicas-teste-v1` |
 | Testes .NET | 46/46 (engine, histerese, calibração) em contêiner; problemas conhecidos do YARG.Core com correção pronta em `docs/upstream/` |
 | PLAYTEST.md | Pronto. **Falta o teste de verdade com o controle** (Lucas) |
 | Relatório final | Depois do playtest |
+
+## Mac, 23/10 — o que foi feito
+
+- Unity Hub (notarizado) + login do Lucas; editor 6000.3.5f2 extraído do `.pkg` oficial (Developer ID da Unity) em `/Applications/Unity/Hub/Editor/6000.3.5f2`; Blender 4.5.15 LTS (sha256 conferido) em `/Applications/Blender.app`, e o Unity converteu o `Notes.blend` sem erro.
+- git-lfs 3.8.1 (sha256 conferido) em `~/.local/bin`; `git lfs pull` no fork (533 arquivos). SDK .NET 10 portátil em `_tools/dotnet` para restaurar o NuGet (`preparar_copia.py` agora acha o `dotnet` sem `.exe`).
+- **O último commit do fork (`5a8bb39e`, controle com AllTaps) não compilava**: `YargProfile.ApplyModifier` não existe. Corrigido para `AddSingleModifier` (`d254d104`).
+- Observações do log, sem efeito nas músicas atuais: a `libvlc.dylib` não vem no projeto (o vídeo de fundo cai no VideoPlayer do Unity; nenhuma das 83 músicas tem vídeo) e o catálogo remoto de cenários `yarg-assets-release.ulna.net` não existe ainda (o mesmo no Windows).
+- Dados do jogo no Mac: `~/Library/Application Support/YARC/YARG/release/` (o YARG oficial v0.15.0, instalado antes como alternativa, usa `~/Library/Application Support/in.yarg.game/release/`). Progresso do Windows não estava no git; para trazer, copiar `profiles/` e `scores/` de `%USERPROFILE%\AppData\LocalLow\YARC\YARG\release\`.
 
 ## Smart App Control: resolvido sem desligar
 

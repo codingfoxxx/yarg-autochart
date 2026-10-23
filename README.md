@@ -13,9 +13,9 @@ Ferramentas e documentação do meu fork pessoal do [YARG](https://github.com/YA
 | `tools/validator/` | Validador em .NET que usa o próprio YARG.Core para carregar e "jogar" o chart gerado | funcionando |
 | `tools/unity-compile-check/` | Confere se o código do fork compila sem o editor do Unity (útil com o Smart App Control) | funcionando |
 | `tests/` | Testes da engine de 5 trastes com inputs temporizados, da histerese dos gatilhos e da calibração do fork (.NET), e da ferramenta (Python) | 43 + 26 testes |
-| `scripts/` | Arrastar um áudio para gerar a música, preparar o ambiente, validar, testes em contêiner, build do jogo | funcionando |
+| `scripts/` | Arrastar um áudio para gerar a música, preparar o ambiente, validar, testes em contêiner, build do jogo (Windows e `build-jogo-mac.sh`) | funcionando |
 | `docs/` | Pesquisa da Fase 0 e auditoria de timing da engine | pronto |
-| `YARG/` | O fork do jogo, como submódulo git ([mudanças](https://github.com/codingfoxxx/YARG/blob/pessoal/CHANGELOG-FORK.md)) | código pronto, build pendente |
+| `YARG/` | O fork do jogo, como submódulo git ([mudanças](https://github.com/codingfoxxx/YARG/blob/pessoal/CHANGELOG-FORK.md)) | build funcionando no Windows e no Mac ([MAC.md](MAC.md)) |
 
 Documentos do projeto: [PLAYTEST.md](PLAYTEST.md) (roteiro de teste com o controle), [DECISION.md](DECISION.md) (decisões e justificativas), [PROGRESS.md](PROGRESS.md) (diário), [SECURITY_LOG.md](SECURITY_LOG.md) (tudo que foi baixado e verificado) e [LICENSES.md](LICENSES.md) (licenças).
 
