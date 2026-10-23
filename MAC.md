@@ -28,10 +28,13 @@ O Hub pode instalar sozinho um editor mais novo no primeiro login; o projeto pre
 ## 3. Compilar
 
 ```bash
+~/GuitarHero/scripts/assinatura-mac.sh   # só na primeira vez
 ~/GuitarHero/scripts/build-jogo-mac.sh
 ```
 
 Confere os pré-requisitos, restaura o NuGet se faltar, compila em modo batch e gera `_builds/YARG.app` (universal), com o log em `_builds/build.log`. A licença vem do login feito no Hub.
+
+**Assinatura:** o build do Unity sai com assinatura ad-hoc, que muda a cada compilação. O macOS guarda as permissões (o jogo pede o **microfone** ao abrir) presas à assinatura, então a cada build ele perguntaria de novo, e o jogo **congela na tela de carregamento** até a resposta (a janela fica atrás do jogo em tela cheia e expira sozinha em 5 min). O `assinatura-mac.sh` cria um certificado local autoassinado, num chaveiro próprio (`~/Library/Keychains/yarg-assinatura.keychain-db`, senha aleatória em `_tools/assinatura/`), e o script de build assina o app com ele: a permissão respondida uma vez vale para todos os builds.
 
 ## 4. Músicas
 
@@ -60,6 +63,11 @@ O atalho `/Applications/Guitar Hero.app` (um applet do AppleScript com esse coma
 ## 7. Controle
 
 Pareie um controle de Xbox (ou PlayStation) por Bluetooth ou cabo; o fork o vincula sozinho a um perfil de 5 trastes com *AllTaps*. O mapeamento dos botões está em `COMO-JOGAR.md`.
+
+## Se o jogo travar na tela de carregamento
+
+- Pedido de permissão escondido atrás do jogo: aperte Cmd+Tab ou saia da tela cheia e responda (Permitir ou Não permitir, tanto faz para guitarra). Só deve aparecer na primeira abertura depois de criar o certificado.
+- Conferir no log do sistema: `/usr/bin/log show --last 10m --predicate 'process == "tccd"' | grep -i microphone`.
 
 ## Avisos conhecidos no log
 

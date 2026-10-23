@@ -54,6 +54,17 @@ codigo=0; wait $pid || codigo=$?
 echo
 if [ $codigo -eq 0 ] && [ -d "$saida" ]; then
     echo "Build OK: $saida"
+    # Assinatura fixa (scripts/assinatura-mac.sh): sem ela o macOS volta a pedir as permissões a cada
+    # build e o jogo congela no carregamento até a resposta.
+    assinatura="$raiz/_tools/assinatura"
+    chaveiro="$HOME/Library/Keychains/yarg-assinatura.keychain-db"
+    if [ -f "$assinatura/identidade" ] && [ -f "$chaveiro" ]; then
+        security unlock-keychain -p "$(cat "$assinatura/senha")" "$chaveiro"
+        codesign --force --deep --keychain "$chaveiro" -s "$(cat "$assinatura/identidade")" "$saida"
+        codesign --verify --deep --strict "$saida" && echo "Assinado com o certificado local."
+    else
+        echo "Aviso: sem certificado local (rode scripts/assinatura-mac.sh); o macOS vai pedir as permissões de novo." >&2
+    fi
 else
     echo "Build falhou (código $codigo). Log: $log" >&2
 fi

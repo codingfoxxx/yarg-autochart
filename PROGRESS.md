@@ -1,7 +1,7 @@
 # PROGRESS — diário do projeto
 
 > Fonte de verdade para retomar o trabalho. Atualizado a cada etapa.
-> Última atualização: 2026-10-23 00:30 (horário de Brasília).
+> Última atualização: 2026-10-23 18:30 (horário de Brasília).
 
 ## Estado atual (resumo)
 
@@ -26,6 +26,13 @@
 - **O último commit do fork (`5a8bb39e`, controle com AllTaps) não compilava**: `YargProfile.ApplyModifier` não existe. Corrigido para `AddSingleModifier` (`d254d104`).
 - Observações do log, sem efeito nas músicas atuais: a `libvlc.dylib` não vem no projeto (o vídeo de fundo cai no VideoPlayer do Unity; nenhuma das 83 músicas tem vídeo) e o catálogo remoto de cenários `yarg-assets-release.ulna.net` não existe ainda (o mesmo no Windows).
 - Dados do jogo no Mac: `~/Library/Application Support/YARC/YARG/release/`. Progresso do Windows não estava no git; para trazer, copiar `profiles/` e `scores/` de `%USERPROFILE%\AppData\LocalLow\YARC\YARG\release\`.
+
+## Mac, 23/10 à tarde — controle sem acertar notas e jogo que não abria
+
+- **Notas não contavam com o DualSense:** o perfil usado ("New Profile", montado pelo menu) estava sem AllTaps. Na engine, só trastes em "The Breaking Wheel" (Hard): 0/1171 sem, 1171/1171 com (`tests/EngineTests/AllTapsTests.cs`). Corrigido o perfil e o fork (`eeadbf8b`): adicionar controle pelo menu também liga o AllTaps. O perfil duplicado "Controle" (sem pontuações) foi removido; backup em `~/yarg-setup/backup-perfis-*`.
+- **Abertura de 80 s:** download das mensagens do YARG sem timeout + um IP do GitHub lento nesta rede. Timeout de 2 s no fork (`2049d70b`); 4-5 s em 6 de 6 aberturas.
+- **Congelava minutos depois de cada build:** pedido de permissão de microfone escondido atrás da tela cheia (log do tccd: pedido às 18:13:22, resposta às 18:18:25, jogo destrava no mesmo segundo). Assinatura ad-hoc muda a cada build; agora o build assina com certificado local fixo (`scripts/assinatura-mac.sh`).
+- Fone Bluetooth (AirPods) soma ~175 ms de latência de saída (log do BASS): calibrar ou jogar na caixa do Mac.
 
 ## Smart App Control: resolvido sem desligar
 
