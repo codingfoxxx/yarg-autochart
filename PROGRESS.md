@@ -25,7 +25,7 @@
 - git-lfs 3.8.1 (sha256 conferido) em `~/.local/bin`; `git lfs pull` no fork (533 arquivos). SDK .NET 10 portátil em `_tools/dotnet` para restaurar o NuGet (`preparar_copia.py` agora acha o `dotnet` sem `.exe`).
 - **O último commit do fork (`5a8bb39e`, controle com AllTaps) não compilava**: `YargProfile.ApplyModifier` não existe. Corrigido para `AddSingleModifier` (`d254d104`).
 - Observações do log, sem efeito nas músicas atuais: a `libvlc.dylib` não vem no projeto (o vídeo de fundo cai no VideoPlayer do Unity; nenhuma das 83 músicas tem vídeo) e o catálogo remoto de cenários `yarg-assets-release.ulna.net` não existe ainda (o mesmo no Windows).
-- Dados do jogo no Mac: `~/Library/Application Support/YARC/YARG/release/` (o YARG oficial v0.15.0, instalado antes como alternativa, usa `~/Library/Application Support/in.yarg.game/release/`). Progresso do Windows não estava no git; para trazer, copiar `profiles/` e `scores/` de `%USERPROFILE%\AppData\LocalLow\YARC\YARG\release\`.
+- Dados do jogo no Mac: `~/Library/Application Support/YARC/YARG/release/`. Progresso do Windows não estava no git; para trazer, copiar `profiles/` e `scores/` de `%USERPROFILE%\AppData\LocalLow\YARC\YARG\release\`.
 
 ## Smart App Control: resolvido sem desligar
 
